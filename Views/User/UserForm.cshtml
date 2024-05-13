@@ -1,0 +1,46 @@
+﻿@model User
+@{
+    
+}
+<h2>Login</h2>
+<form method="post">
+    <div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control">
+    <span style="color:red">
+        @Html.ValidationMessageFor(x => x.Name)
+        <br/>
+    </span>
+    <label asp-for="Password" class="form-label"></label>
+    <input asp-for="Password" class="form-control" type="password">
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Password)
+            <br />
+        </span>
+    <label asp-for="Age" class="form-label"></label>
+    <input asp-for="Age" class="form-control" type="number">
+    <span style="color:red">
+        @Html.ValidationMessageFor(x => x.Age)
+        <br />
+    </span>
+    <input asp-for="IsMale" class="form-check-input" type="checkbox">
+    <label asp-for="IsMale" class="form-label"></label>
+    <span style="color:red">
+            @Html.ValidationMessageFor(x => x.IsMale)
+        <br />
+    </span>
+    <label asp-for="Balance" class="form-label"></label>
+        <input asp-for="Balance" class="form-control" type="number" step=".01">
+    <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Balance)
+        <br />
+    </span>
+    <label asp-for="Birthday" class="form-label"></label>
+        <input asp-for="Birthday" class="form-control">
+    <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Birthday)
+        <br />
+    </span>
+    </div>
+    <button type="submit">Відправити</button>
+</form>
