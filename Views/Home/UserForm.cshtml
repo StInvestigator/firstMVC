@@ -1,0 +1,22 @@
+﻿@model User
+@{
+    
+}
+<h2>Login</h2>
+<form method="post">
+    <div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control">
+    <span style="color:red">
+        @Html.ValidationMessageFor(x => x.Name)
+        <br/>
+    </span>
+    <label asp-for="Password" class="form-label"></label>
+    <input asp-for="Password" class="form-control" type="password">
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Password)
+            <br />
+        </span>
+    </div>
+    <button type="submit">Відправити</button>
+</form>

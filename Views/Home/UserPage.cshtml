@@ -1,0 +1,15 @@
+﻿@{
+    string text = "";
+    if (ViewData.ContainsKey("UserName"))
+    {
+        text = "Hello " + ViewData["UserName"] + '!';
+    }
+    else
+    {
+        text = "You need to login first";
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">@text</h1>
+</div>
