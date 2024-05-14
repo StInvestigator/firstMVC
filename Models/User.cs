@@ -7,26 +7,20 @@ namespace firstMVC.Models
     {
         [DisplayName("Ім'я")]
         [Required(ErrorMessage = "Ім'я обов'язкове")]
-        [MinLength(3, ErrorMessage = "Мінімум 3 символи")]
         [MaxLength(20, ErrorMessage = "Максимум 20 символів")]
         public string Name { get; set; }
 
-
-        [DisplayName("Пароль")]
-        [Required(ErrorMessage = "Пароль обов'язковий")]
-        [MinLength(8, ErrorMessage = "Мінімум 8 символів")]
-        [MaxLength(20, ErrorMessage = "Максимум 20 символів")]
-        public string Password { get; set; }
-
-        [DisplayName("Чи чоловік")]
-        [Required(ErrorMessage = "Стать обов'язковa")]
-        public bool IsMale { get; set; }
-
         [DisplayName("Вік")]
+        [Required(ErrorMessage = "Вік обов'язковий")]
+
         public int Age { get; set; }
 
+        [DisplayName("Чи чоловік")]
+        public bool IsMale { get; set; }
+
+
         [DisplayName("Баланс")]
-        [Required(ErrorMessage = "Вік обов'язковий")]
+        [Required(ErrorMessage = "Баланс обов'язковий")]
         public decimal Balance { get; set; }
 
         [DisplayName("День Народження")]
