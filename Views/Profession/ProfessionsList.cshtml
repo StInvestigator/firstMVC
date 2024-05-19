@@ -1,0 +1,29 @@
+﻿@{
+    Dictionary<int, Profession>? professions = Model as Dictionary<int, Profession>;
+    if (professions?.Count != 0)
+    {
+    <table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Професія</th>
+    </tr>
+    </thead>
+     <tbody>
+    @foreach(var item in professions)
+    {
+        <tr>
+            <th scope="row">@item.Key</th>
+            <td>@item.Value.Name</td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="ProfessionForm" asp-route-id=@item.Key>Edit</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="DeleteProfession" asp-route-id=@item.Key>Delete</a></button></td>
+        </tr>
+    }
+    </tbody>
+    </table>
+    }
+    else
+    {
+       <h1 class="display-4 text-center">Currently there is no professions</h1>
+    }
+}

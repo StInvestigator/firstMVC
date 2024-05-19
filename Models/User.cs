@@ -27,5 +27,9 @@ namespace firstMVC.Models
         [Required(ErrorMessage = "День Народження обов'язковий")]
 
         public DateTime Birthday { get; set; }
+
+        [DisplayName("Професія")]
+
+        public int ProfessionId { get; set; }
     }
 }

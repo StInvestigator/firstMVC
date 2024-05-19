@@ -5,25 +5,24 @@ using System.Text.Json;
 
 namespace firstMVC.Services
 {
-    public class UserService : IDictionarySaveLoadEditAsync<User>
+    public class ProfessionService : IDictionarySaveLoadEditAsync<Profession>
     {
         private string _filePath;
-        public Dictionary<int,User> users { get; private set; }
-
-        public UserService(string filePath) 
+        public Dictionary<int, Profession> professions { get; private set; }
+        public ProfessionService(string filePath) 
         {
             _filePath = filePath;
             LoadAsync().Wait();
         }
-        public async Task AddOrEditUser(int id, User newUser)
+        public async Task AddOrEditUser(int id, Profession newProfession)
         {
-            if(users.ContainsKey(id))
+            if(professions.ContainsKey(id))
             {
-                users[id] = newUser;
+                professions[id] = newProfession;
             }
             else
             {
-                users.Add(id, newUser);
+                professions.Add(id, newProfession);
             }
 
             await SaveAsync();
@@ -33,12 +32,12 @@ namespace firstMVC.Services
             if(File.Exists(_filePath))
             {
                 var file = File.OpenRead(_filePath);
-                users = await JsonSerializer.DeserializeAsync<Dictionary<int, User>>(file);
+                professions = await JsonSerializer.DeserializeAsync<Dictionary<int, Profession>>(file);
                 file.Close();
             }
             else
             {
-                users = new Dictionary<int, User>();
+                professions = new Dictionary<int, Profession>();
             }
         }
         public async Task SaveAsync()
@@ -48,7 +47,7 @@ namespace firstMVC.Services
                 File.WriteAllText(_filePath, string.Empty);
             }
             var file = File.OpenWrite(_filePath);
-            await JsonSerializer.SerializeAsync(file, users);
+            await JsonSerializer.SerializeAsync(file, professions);
             file.Close();
         }
     }

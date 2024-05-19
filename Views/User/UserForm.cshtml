@@ -1,5 +1,7 @@
 ﻿@model User
-@{}
+@{
+    var professions = ViewData["professions"] as Dictionary<int, Profession>;
+}
 <h2>User properties</h2>
 <form method="post">
     <div class="mb-3">
@@ -28,11 +30,23 @@
         <br />
     </span>
     <label asp-for="Birthday" class="form-label"></label>
-        <input asp-for="Birthday" class="form-control">
+    <input asp-for="Birthday" class="form-control">
     <span style="color:red">
             @Html.ValidationMessageFor(x => x.Birthday)
         <br />
     </span>
+        <label asp-for="ProfessionId" class="form-label"></label>
+        <select asp-for="ProfessionId" class="form-control">
+            <option value=-1>Безробітний</option>
+            @foreach(var profession in professions)
+            {
+                <option value=@profession.Key>@profession.Value.Name</option>
+            }
+        </select>
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.ProfessionId)
+            <br />
+        </span>
     </div>
-    <button type="submit">Відправити</button>
+    <button type="submit" class="btn btn-outline-success">Відправити</button>
 </form>

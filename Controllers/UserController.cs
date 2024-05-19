@@ -7,17 +7,21 @@ namespace firstMVC.Controllers
     public class UserController : Controller
     {
         private readonly UserService _userService;
-        public UserController()
+        private readonly ProfessionService _professionService;
+        public UserController(UserService userService, ProfessionService professionService)
         {
-            _userService = new UserService("users.json");
+            _userService = userService;
+            _professionService = professionService;
         }
         public IActionResult UsersList()
         {
+            ViewData["professions"] = _professionService.professions;
             return View(_userService.users);
         }
         [HttpGet]
         public IActionResult UserForm(int? id)
         {
+            ViewData["professions"] = _professionService.professions;
             try
             {
                 if (id != null)

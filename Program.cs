@@ -1,7 +1,16 @@
+using firstMVC.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton(pr => new UserService(builder.Configuration.GetValue<string>("FileStorage:UsersFilePath")));
+builder.Services.AddSingleton(pr => new ProfessionService(builder.Configuration.GetValue<string>("FileStorage:ProfessionsFilePath")));
 
 var app = builder.Build();
 

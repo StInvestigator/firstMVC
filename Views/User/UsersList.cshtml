@@ -1,27 +1,36 @@
 ﻿@{
+    var professions = ViewData["professions"] as Dictionary<int, Profession>;
     Dictionary<int, User>? users = Model as Dictionary<int, User>;
     if (users?.Count != 0)
     {
-    <table style="margin:0 auto">
+    <table class="table">
+    <thead>
     <tr>
-        <th>Ім'я</th>
-        <th>Вік</th>
-        <th>Стать</th>
-        <th>Баланс</th>
-        <th>День народження</th>
+        <th scope="col">#</th>
+        <th scope="col">Ім'я</th>
+        <th scope="col">Вік</th>
+        <th scope="col">Стать</th>
+        <th scope="col">Баланс</th>
+        <th scope="col">День народження</th>
+        <th scope="col">Професія</th>
     </tr>
+    </thead>
+     <tbody>
     @foreach(var item in users)
     {
         <tr>
+            <th scope="row">@item.Key</th>
             <td>@item.Value.Name</td>
             <td>@item.Value.Age</td>
             <td>@(item.Value.IsMale?"Чоловік":"Жінка")</td>
             <td>@item.Value.Balance$</td>
             <td>@item.Value.Birthday</td>
-            <td style="border:none"><button><a asp-controller="User" asp-action="UserForm" asp-route-id=@item.Key>Edit</a></button></td>
-            <td style="border:none"><button><a asp-controller="User" asp-action="DeleteUser" asp-route-id=@item.Key>Delete</a></button></td>
+            <td>@(item.Value.ProfessionId==-1?"Безробітний":professions?[item.Value.ProfessionId].Name)</td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="UserForm" asp-route-id=@item.Key>Edit</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="DeleteUser" asp-route-id=@item.Key>Delete</a></button></td>
         </tr>
     }
+    </tbody>
     </table>
     }
     else
