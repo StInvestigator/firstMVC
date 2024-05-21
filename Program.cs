@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton(pr => new UserService(builder.Configuration.GetValue<string>("FileStorage:UsersFilePath")));
 builder.Services.AddSingleton(pr => new ProfessionService(builder.Configuration.GetValue<string>("FileStorage:ProfessionsFilePath")));
+builder.Services.AddSingleton(pr => new SkillService(builder.Configuration.GetValue<string>("FileStorage:SkillsFilePath")));
 
 var app = builder.Build();
 

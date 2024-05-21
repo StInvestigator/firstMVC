@@ -26,7 +26,7 @@ namespace firstMVC.Controllers
             {
                 if (id != null)
                 {
-                    return View(_userService.users[id.Value]);
+                    return View(_userService.users[_userService.users.FindIndex(us=>us.Id==id)]);
                 }
             }
             catch { }
@@ -38,14 +38,16 @@ namespace firstMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewData["professions"] = _professionService.professions;
                 return View(form);
             }
-            await _userService.AddOrEditUser(id!=null?id.Value:_userService.users.Count == 0 ? 0: _userService.users.Keys.Last() + 1, form);
+            form.Id = id != null ? id.Value : _userService.users.Count == 0 ? 0 : _userService.users.Last().Id + 1;
+            await _userService.AddOrEdit(form);
             return RedirectToAction("UsersList");
         }
         public async Task<IActionResult> DeleteUser(int id)
         {
-            _userService.users.Remove(id);
+            _userService.users.Remove(_userService.users.Find(us=>us.Id==id));
             await _userService.SaveAsync();
             return RedirectToAction("UsersList");
         }

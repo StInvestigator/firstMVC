@@ -1,0 +1,43 @@
+﻿@{
+    var users = Model as List<User>;
+    if (users?.Count != 0)
+    {
+    @foreach (var user in users)
+    {
+        <div style="display:flex; justify-content:space-between">
+        <h2>@user.Name</h2>
+                <button class="btn btn-outline-success" style="width:200px; padding:0; height:30px; margin-top:10px"><a class="buttonA" asp-controller="UserSkill" asp-action="UserSkillForm" asp-route-userId=@user.Id>Додати навичку</a></button>
+        </div>
+
+    <table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Навичка</th>
+        <th scope="col">Мастерність</th>
+    </tr>
+    </thead>
+     <tbody>
+            @foreach (var item in user.Skills)
+            {
+        <tr>
+            <th scope="row">@item.Skill.Id</th>
+            <td>@item.Skill.Name</td>
+            <td style="width:250px">
+                <div class="progress" style="width:250px; height:20px; margin-top:5px">
+                    <div class="progress-bar" role="progressbar" style="width: @item.Mastery%;" aria-valuenow=@item.Mastery aria-valuemin="0" aria-valuemax="100">@item.Mastery%</div>
+                </div>
+            </td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="UserSkill" asp-action="UserSkillForm" asp-route-userId=@user.Id asp-route-userSkillId=@item.Skill.Id>Edit</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="UserSkill" asp-action="DeleteUserSkill" asp-route-userId=@user.Id asp-route-userSkillId=@item.Skill.Id>Delete</a></button></td>
+        </tr>
+            }
+    </tbody>
+    </table>
+    }
+    }
+    else
+    {
+       <h1 class="display-4 text-center">Currently there is no users</h1>
+    }
+}

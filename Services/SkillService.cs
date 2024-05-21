@@ -5,28 +5,25 @@ using System.Text.Json;
 
 namespace firstMVC.Services
 {
-    public class UserService : IListSaveLoadEditAsync<User>
+    public class SkillService : IListSaveLoadEditAsync<Skill>
     {
         private string _filePath;
-        public List<User> users { get; private set; }
-
-        public UserService(string filePath) 
+        public List<Skill> skills { get; private set; }
+        public SkillService(string filePath) 
         {
             _filePath = filePath;
             LoadAsync().Wait();
         }
-        public async Task AddOrEdit(User newUser)
+        public async Task AddOrEdit(Skill newSkill)
         {
-            int index = users.FindIndex(s => s.Id == newUser.Id);
+            int index = skills.FindIndex(s => s.Id == newSkill.Id);
             if (index != -1)
             {
-                newUser.Skills = users[index].Skills;
-                users[index] = newUser;
+                skills[index] = newSkill;
             }
             else
             {
-                newUser.Skills = new List<UserSkill>();
-                users.Add(newUser);
+                skills.Add(newSkill);
             }
 
             await SaveAsync();
@@ -36,12 +33,12 @@ namespace firstMVC.Services
             if(File.Exists(_filePath))
             {
                 var file = File.OpenRead(_filePath);
-                users = await JsonSerializer.DeserializeAsync<List<User>>(file);
+                skills = await JsonSerializer.DeserializeAsync<List<Skill>>(file);
                 file.Close();
             }
             else
             {
-                users = new List<User>();
+                skills = new List<Skill> ();
             }
         }
         public async Task SaveAsync()
@@ -51,7 +48,7 @@ namespace firstMVC.Services
                 File.WriteAllText(_filePath, string.Empty);
             }
             var file = File.OpenWrite(_filePath);
-            await JsonSerializer.SerializeAsync(file, users);
+            await JsonSerializer.SerializeAsync(file, skills);
             file.Close();
         }
     }

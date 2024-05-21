@@ -1,6 +1,6 @@
 ﻿@model User
 @{
-    var professions = ViewData["professions"] as Dictionary<int, Profession>;
+    var professions = ViewData["professions"] as List<Profession>;
 }
 <h2>User properties</h2>
 <form method="post">
@@ -40,7 +40,7 @@
             <option value=-1>Безробітний</option>
             @foreach(var profession in professions)
             {
-                <option value=@profession.Key>@profession.Value.Name</option>
+                <option value=@profession.Id>@profession.Name</option>
             }
         </select>
         <span style="color:red">

@@ -38,16 +38,17 @@ namespace firstMVC.Controllers
             {
                 return View(form);
             }
-            await _professionService.AddOrEditUser(id!=null? id.Value:_professionService.professions.Count == 0 ? 0 : _professionService.professions.Keys.Last() + 1, form);
+            form.Id = id != null ? id.Value : _professionService.professions.Count == 0 ? 0 : _professionService.professions.Last().Id + 1;
+            await _professionService.AddOrEdit(form);
             return RedirectToAction("ProfessionsList");
         }
         public async Task<IActionResult> DeleteProfession(int id)
         {
-            foreach (var item in _userService.users.Where(pr => pr.Value.ProfessionId == id))
+            foreach (var item in _userService.users.Where(us => us.ProfessionId == id))
             {
-                item.Value.ProfessionId = -1;
+                item.ProfessionId = -1;
             }
-            _professionService.professions.Remove(id);
+            _professionService.professions.Remove(_professionService.professions.Find(pr=>pr.Id == id));
             await _professionService.SaveAsync();
             return RedirectToAction("ProfessionsList");
         }

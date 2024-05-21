@@ -1,0 +1,30 @@
+﻿@{
+    var skills = Model as List<Skill>;
+    if (skills?.Count != 0)
+    {
+    <table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Навичка</th>
+    </tr>
+    </thead>
+     <tbody>
+    @foreach(var item in skills)
+    {
+        <tr>
+            <th scope="row">@item.Id</th>
+            <td>@item.Name</td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Skill" asp-action="SkillForm" asp-route-id=@item.Id>Edit</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="Skill" asp-action="DeleteSkill" asp-route-id=@item.Id>Delete</a></button></td>
+        </tr>
+    }
+    </tbody>
+    </table>
+    <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-controller="Skill" asp-action="SkillForm">Додати навичку</a></button>
+    }
+    else
+    {
+       <h1 class="display-4 text-center">Currently there is no skills</h1>
+    }
+}

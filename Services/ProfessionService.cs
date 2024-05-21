@@ -5,24 +5,25 @@ using System.Text.Json;
 
 namespace firstMVC.Services
 {
-    public class ProfessionService : IDictionarySaveLoadEditAsync<Profession>
+    public class ProfessionService : IListSaveLoadEditAsync<Profession>
     {
         private string _filePath;
-        public Dictionary<int, Profession> professions { get; private set; }
+        public List<Profession> professions { get; private set; }
         public ProfessionService(string filePath) 
         {
             _filePath = filePath;
             LoadAsync().Wait();
         }
-        public async Task AddOrEditUser(int id, Profession newProfession)
+        public async Task AddOrEdit(Profession newProfession)
         {
-            if(professions.ContainsKey(id))
+            int index = professions.FindIndex(s => s.Id == newProfession.Id);
+            if (index != -1)
             {
-                professions[id] = newProfession;
+                professions[index] = newProfession;
             }
             else
             {
-                professions.Add(id, newProfession);
+                professions.Add(newProfession);
             }
 
             await SaveAsync();
@@ -32,12 +33,12 @@ namespace firstMVC.Services
             if(File.Exists(_filePath))
             {
                 var file = File.OpenRead(_filePath);
-                professions = await JsonSerializer.DeserializeAsync<Dictionary<int, Profession>>(file);
+                professions = await JsonSerializer.DeserializeAsync<List<Profession>>(file);
                 file.Close();
             }
             else
             {
-                professions = new Dictionary<int, Profession>();
+                professions = new List<Profession>();
             }
         }
         public async Task SaveAsync()

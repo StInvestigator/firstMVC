@@ -5,6 +5,8 @@ namespace firstMVC.Models
 {
     public class User
     {
+        public int Id { get; set; }
+
         [DisplayName("Ім'я")]
         [Required(ErrorMessage = "Ім'я обов'язкове")]
         [MaxLength(20, ErrorMessage = "Максимум 20 символів")]
@@ -31,5 +33,10 @@ namespace firstMVC.Models
         [DisplayName("Професія")]
 
         public int ProfessionId { get; set; }
+
+        [DisplayName("Навички")]
+        public List<UserSkill>? Skills { get; set; }
+
+        // Skill (Name + Id) -> FullSkill (Skill + level) -> FullSkills list 
     }
 }

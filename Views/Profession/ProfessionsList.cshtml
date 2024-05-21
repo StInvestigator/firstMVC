@@ -1,5 +1,5 @@
 ﻿@{
-    Dictionary<int, Profession>? professions = Model as Dictionary<int, Profession>;
+    var professions = Model as List<Profession>;
     if (professions?.Count != 0)
     {
     <table class="table">
@@ -13,14 +13,15 @@
     @foreach(var item in professions)
     {
         <tr>
-            <th scope="row">@item.Key</th>
-            <td>@item.Value.Name</td>
-            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="ProfessionForm" asp-route-id=@item.Key>Edit</a></button></td>
-            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="DeleteProfession" asp-route-id=@item.Key>Delete</a></button></td>
+            <th scope="row">@item.Id</th>
+            <td>@item.Name</td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="ProfessionForm" asp-route-id=@item.Id>Edit</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="DeleteProfession" asp-route-id=@item.Id>Delete</a></button></td>
         </tr>
     }
     </tbody>
     </table>
+    <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-controller="Profession" asp-action="ProfessionForm">Додати професію</a></button>
     }
     else
     {

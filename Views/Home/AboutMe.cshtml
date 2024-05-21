@@ -1,6 +1,6 @@
 ﻿@{
     var me = ViewData["AboutMe"] as AboutMe;
-    var skills = ViewData["Skills"] as List<Skill>;
+    // var skills = ViewData["Skills"] as List<Skill>;
 }
 
 <h2>Мене звати <span style="color:red">@me.Surname @me.Name</span></h2>
@@ -9,7 +9,7 @@
 <p>На сьогодняшній день навчаюсь в 11-ому класі</p>
 <p>У вільний час граю у шахи, відеоігри, відвідую спортивний зал</p>
 <img src=@me.ImageUrl style="width:200px" />
-<h2>Деякі мої навички:</h2>
+@* <h2>Деякі мої навички:</h2>
 <table>
     <tr>
         <th>Id</th>
@@ -28,4 +28,4 @@
             </td>
     </tr>
     }
-</table>
+</table> *@
