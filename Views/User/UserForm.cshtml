@@ -1,9 +1,9 @@
-﻿@model User
+﻿@model UserForm
 @{
     var professions = ViewData["professions"] as List<Profession>;
 }
 <h2>User properties</h2>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div class="mb-3">
     <label asp-for="Name" class="form-label"></label>
     <input asp-for="Name" class="form-control">
@@ -45,6 +45,12 @@
         </select>
         <span style="color:red">
             @Html.ValidationMessageFor(x => x.ProfessionId)
+            <br />
+        </span>
+        <label asp-for="Image" class="form-label"></label>
+        <input asp-for="Image" class="form-control" type="file" accept="image/*">
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Image)
             <br />
         </span>
     </div>

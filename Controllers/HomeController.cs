@@ -19,7 +19,7 @@ namespace firstMVC.Controllers
         }
         public IActionResult AboutMe()
         {
-            AboutMe aboutMe = new AboutMe("Владислав", "Мурашко", 17, "народився в Краматорську, зараз перебуваю в Одесі", "/img/Gigachad.jpg");
+            AboutMe aboutMe = new AboutMe("Владислав", "Мурашко", 17, "народився в Краматорську, зараз перебуваю в Одесі", "/img/default/Gigachad.jpg");
 
 
             ViewData["AboutMe"] = aboutMe;

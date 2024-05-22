@@ -7,6 +7,7 @@
     <thead>
     <tr>
         <th scope="col">#</th>
+        <th scope="col">Аватар</th>
         <th scope="col">Ім'я</th>
         <th scope="col">Вік</th>
         <th scope="col">Стать</th>
@@ -20,6 +21,7 @@
     {
         <tr>
             <th scope="row">@item.Id</th>
+            <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:15px" src="@(item.Image==null?"/img/default/Gigachad.jpg":item.Image.Path)"/></th>
             <td>@item.Name</td>
             <td>@item.Age</td>
             <td>@(item.IsMale?"Чоловік":"Жінка")</td>
@@ -32,10 +34,10 @@
     }
     </tbody>
     </table>
-    <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-controller="User" asp-action="UserForm">Додати користувача</a></button>
     }
     else
     {
        <h1 class="display-4 text-center">Currently there is no users</h1>
     }
+    <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-controller="User" asp-action="UserForm">Додати користувача</a></button>
 }

@@ -6,9 +6,7 @@ namespace firstMVC.Models
     public class Skill
     {
         public int Id { get; set; }
-
-        [DisplayName("Назва")]
-        [Required(ErrorMessage = "Назва необхідна")]
         public string Name { get; set; }
+        public Image? Image { get; set; }
     }
 }

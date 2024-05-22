@@ -4,15 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace firstMVC.Controllers
 {
-    public class ProfessionController : Controller
+    public class ProfessionController (UserService _userService, ProfessionService _professionService) : Controller
     {
-        private readonly UserService _userService;
-        private readonly ProfessionService _professionService;
-        public ProfessionController(UserService userService, ProfessionService professionService)
-        {
-            _userService = userService;
-            _professionService = professionService;
-        }
         public IActionResult ProfessionsList()
         {
             return View(_professionService.professions);

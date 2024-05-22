@@ -6,37 +6,14 @@ namespace firstMVC.Models
     public class User
     {
         public int Id { get; set; }
-
-        [DisplayName("Ім'я")]
-        [Required(ErrorMessage = "Ім'я обов'язкове")]
-        [MaxLength(20, ErrorMessage = "Максимум 20 символів")]
         public string Name { get; set; }
-
-        [DisplayName("Вік")]
-        [Required(ErrorMessage = "Вік обов'язковий")]
-
         public int Age { get; set; }
-
-        [DisplayName("Чи чоловік")]
         public bool IsMale { get; set; }
-
-
-        [DisplayName("Баланс")]
-        [Required(ErrorMessage = "Баланс обов'язковий")]
         public decimal Balance { get; set; }
-
-        [DisplayName("День Народження")]
-        [Required(ErrorMessage = "День Народження обов'язковий")]
-
         public DateTime Birthday { get; set; }
-
-        [DisplayName("Професія")]
-
         public int ProfessionId { get; set; }
-
         [DisplayName("Навички")]
         public List<UserSkill>? Skills { get; set; }
-
-        // Skill (Name + Id) -> FullSkill (Skill + level) -> FullSkills list 
+        public Image? Image { get; set; }
     }
 }

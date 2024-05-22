@@ -31,6 +31,44 @@ namespace firstMVC.Services
 
             await SaveAsync();
         }
+
+        public async Task AddOrEdit(UserForm form)
+        {
+            var newUser = new User
+            {
+                Id = form.Id,
+                Name = form.Name,
+                Age = form.Age,
+                Balance = form.Balance,
+                Birthday = form.Birthday,
+                IsMale = form.IsMale,
+                ProfessionId = form.ProfessionId,
+                Image = form.Image == null ? null : new Image { Name = form.Image.FileName, Path = "\\img\\user\\" + form.Image.FileName }
+            };
+            await AddOrEdit(newUser);
+        }
+        public void UpdateSkills(Skill newSkill)
+        {
+            foreach (var us in users)
+            {
+                var skill = us.Skills.Find(s => s.Skill.Id == newSkill.Id);
+                if (skill != null)
+                {
+                    skill.Skill = newSkill;
+                }
+            }
+        }
+        public void DeleteSkills(Skill toDelete)
+        {
+            foreach (var us in users)
+            {
+                var skill = us.Skills.Find(s => s.Skill.Id == toDelete.Id);
+                if (skill != null)
+                {
+                    us.Skills.Remove(skill);
+                }
+            }
+        }
         public async Task LoadAsync()
         {
             if(File.Exists(_filePath))

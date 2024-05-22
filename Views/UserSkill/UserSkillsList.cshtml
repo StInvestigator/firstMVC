@@ -6,13 +6,14 @@
     {
         <div style="display:flex; justify-content:space-between">
         <h2>@user.Name</h2>
-                <button class="btn btn-outline-success" style="width:200px; padding:0; height:30px; margin-top:10px"><a class="buttonA" asp-controller="UserSkill" asp-action="UserSkillForm" asp-route-userId=@user.Id>Додати навичку</a></button>
+            <button class="btn btn-outline-success" style="width:200px; padding:0; height:30px; margin-top:15px"><a class="buttonA" asp-controller="UserSkill" asp-action="UserSkillForm" asp-route-userId=@user.Id>Додати навичку</a></button>
         </div>
 
     <table class="table">
     <thead>
     <tr>
         <th scope="col">#</th>
+        <th scope="col">Лого</th>
         <th scope="col">Навичка</th>
         <th scope="col">Мастерність</th>
     </tr>
@@ -22,6 +23,7 @@
             {
         <tr>
             <th scope="row">@item.Skill.Id</th>
+            <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:5px" src="@(item.Skill.Image==null?"/img/default/Gigachad.jpg":item.Skill.Image.Path)"/></th>
             <td>@item.Skill.Name</td>
             <td style="width:250px">
                 <div class="progress" style="width:250px; height:20px; margin-top:5px">

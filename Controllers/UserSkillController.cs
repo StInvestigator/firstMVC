@@ -5,15 +5,8 @@ using System.Net;
 
 namespace firstMVC.Controllers
 {
-    public class UserSkillController : Controller
+    public class UserSkillController (UserService _userService, SkillService _skillService) : Controller
     {
-        private readonly UserService _userService;
-        private readonly SkillService _skillService;
-        public UserSkillController(UserService userService, SkillService skillService)
-        {
-            _userService = userService;
-            _skillService = skillService;
-        }
         public IActionResult UserSkillsList()
         {
             return View(_userService.users);

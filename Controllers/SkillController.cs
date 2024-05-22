@@ -4,15 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace firstMVC.Controllers
 {
-    public class SkillController : Controller
+    public class SkillController (SkillService _skillService, UserService _userService) : Controller
     {
-        private readonly SkillService _skillService;
-        private readonly UserService _userService;
-        public SkillController(SkillService skillService, UserService userService)
-        {
-            _skillService = skillService;
-            _userService = userService;
-        }
         public IActionResult SkillsList()
         {
             return View(_skillService.skills);
@@ -24,42 +17,53 @@ namespace firstMVC.Controllers
             {
                 if (id != null)
                 {
-                    return View(_skillService.skills[_skillService.skills.FindIndex(us => us.Id == id)]);
+                    return View(new SkillForm(_skillService.skills[_skillService.skills.FindIndex(us => us.Id == id)]));
                 }
             }
             catch { }
-            return View(new Skill());
+            return View(new SkillForm());
         }
 
         [HttpPost]
-        public async Task<IActionResult> SkillForm(int? id, [FromForm] Skill form)
+        public async Task<IActionResult> SkillForm(int? id, [FromForm] SkillForm form)
         {
             if (!ModelState.IsValid)
             {
                 return View(form);
             }
-            form.Id = id != null ? id.Value : _skillService.skills.Count == 0 ? 0 : _skillService.skills.Last().Id + 1;
+            var newSkill = new Skill { 
+                Id = id != null ? id.Value : _skillService.skills.Count == 0 ? 0 : _skillService.skills.Last().Id + 1, 
+                Name = form.Name, 
+                Image = form.Image == null ? null : new Image { Name = form.Image.FileName, Path = "\\img\\skill\\" + form.Image.FileName }
+            };
             if (id != null)
             {
-                _userService.users.ForEach(us =>
+                _userService.UpdateSkills(newSkill);
+                var skill = _skillService.skills.Find(us => us.Id == id);
+                if (skill?.Image != null && _skillService.skills.Where(us => us.Image?.Path == skill.Image.Path).Count() == 1)
                 {
-                    var skill = us.Skills.Find(s => s.Skill.Id == id);
-                    if (skill != null)
-                    {
-                        skill.Skill = form;
-                    }
-                });
+                    System.IO.File.Delete("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + skill.Image.Path);
+                }
             }
-            await _skillService.AddOrEdit(form);
+            if (form.Image != null)
+            {
+                using (var fileStream = new FileStream("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + "\\img\\skill\\" + form.Image.FileName, FileMode.Create))
+                {
+                    await form.Image.CopyToAsync(fileStream);
+                }
+            }
+            await _skillService.AddOrEdit(newSkill);
             return RedirectToAction("SkillsList");
         }
         public async Task<IActionResult> DeleteSkill(int id)
         {
-            _userService.users.ForEach(us =>
+            var skill = _skillService.skills.Find(us => us.Id == id);
+            if (skill?.Image != null && _userService.users.Where(us => us.Image?.Path == skill.Image.Path).Count() == 1)
             {
-                us.Skills.Remove(us.Skills.Find(s => s.Skill.Id == id));
-            });
-            _skillService.skills.Remove(_skillService.skills.Find(us => us.Id == id));
+                System.IO.File.Delete("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + skill.Image.Path);
+            }
+            _userService.DeleteSkills(skill);
+            _skillService.skills.Remove(skill);
             await _skillService.SaveAsync();
             return RedirectToAction("SkillsList");
         }

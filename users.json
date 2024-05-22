@@ -1,1 +1,1 @@
-[{"Id":1,"Name":"Cool user","Age":23,"IsMale":true,"Balance":1231,"Birthday":"1221-01-01T00:00:00","ProfessionId":0,"Skills":[{"Skill":{"Id":2,"Name":"Vey cool"},"Mastery":48},{"Skill":{"Id":1,"Name":"Ultra cool skill"},"Mastery":100}]},{"Id":2,"Name":"Not that cool user","Age":1233,"IsMale":true,"Balance":123,"Birthday":"0123-01-01T00:00:00","ProfessionId":-1,"Skills":[{"Skill":{"Id":1,"Name":"Ultra cool skill"},"Mastery":73}]}]
+[{"Id":0,"Name":"123123","Age":12,"IsMale":true,"Balance":0,"Birthday":"0001-01-01T00:00:00","ProfessionId":0,"Skills":[],"Image":null}]
