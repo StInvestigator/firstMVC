@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace firstMVC.Controllers
 {
-    public class SkillController (SkillService _skillService, UserService _userService) : Controller
+    public class SkillController (SkillService _skillService, UserService _userService, LocalFileService _fileService) : Controller
     {
         public IActionResult SkillsList()
         {
@@ -31,25 +31,18 @@ namespace firstMVC.Controllers
             {
                 return View(form);
             }
-            var newSkill = new Skill { 
-                Id = id != null ? id.Value : _skillService.skills.Count == 0 ? 0 : _skillService.skills.Last().Id + 1, 
-                Name = form.Name, 
-                Image = form.Image == null ? null : new Image { Name = form.Image.FileName, Path = "\\img\\skill\\" + form.Image.FileName }
+            var newSkill = new Skill {
+                Id = id != null ? id.Value : _skillService.skills.Count == 0 ? 0 : _skillService.skills.Last().Id + 1,
+                Name = form.Name,
+                Image = form.Image == null ? null : await _fileService.CreateImage(form.Image)
             };
             if (id != null)
             {
                 _userService.UpdateSkills(newSkill);
                 var skill = _skillService.skills.Find(us => us.Id == id);
-                if (skill?.Image != null && _skillService.skills.Where(us => us.Image?.Path == skill.Image.Path).Count() == 1)
+                if (skill?.Image != null)
                 {
-                    System.IO.File.Delete("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + skill.Image.Path);
-                }
-            }
-            if (form.Image != null)
-            {
-                using (var fileStream = new FileStream("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + "\\img\\skill\\" + form.Image.FileName, FileMode.Create))
-                {
-                    await form.Image.CopyToAsync(fileStream);
+                    _fileService.DeleteImage(skill.Image);
                 }
             }
             await _skillService.AddOrEdit(newSkill);
@@ -58,9 +51,9 @@ namespace firstMVC.Controllers
         public async Task<IActionResult> DeleteSkill(int id)
         {
             var skill = _skillService.skills.Find(us => us.Id == id);
-            if (skill?.Image != null && _userService.users.Where(us => us.Image?.Path == skill.Image.Path).Count() == 1)
+            if (skill?.Image != null)
             {
-                System.IO.File.Delete("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + skill.Image.Path);
+                _fileService.DeleteImage(skill.Image);
             }
             _userService.DeleteSkills(skill);
             _skillService.skills.Remove(skill);

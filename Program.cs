@@ -12,6 +12,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton(pr => new UserService(builder.Configuration.GetValue<string>("FileStorage:UsersFilePath")));
 builder.Services.AddSingleton(pr => new ProfessionService(builder.Configuration.GetValue<string>("FileStorage:ProfessionsFilePath")));
 builder.Services.AddSingleton(pr => new SkillService(builder.Configuration.GetValue<string>("FileStorage:SkillsFilePath")));
+builder.Services.AddScoped(pr => 
+{
+    var enviroment = pr.GetRequiredService<IWebHostEnvironment>();
+    return new LocalFileService(Path.Combine(enviroment.WebRootPath,"uploads","img"));
+});
 
 var app = builder.Build();
 

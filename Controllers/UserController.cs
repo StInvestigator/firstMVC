@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace firstMVC.Controllers
 {
-    public class UserController (UserService _userService, ProfessionService _professionService) : Controller
+    public class UserController (UserService _userService, ProfessionService _professionService, LocalFileService _fileService) : Controller
     {
 
         public IActionResult UsersList()
@@ -35,33 +35,31 @@ namespace firstMVC.Controllers
                 ViewData["professions"] = _professionService.professions;
                 return View(form);
             }
-            if(form.Image != null)
+            Image? img = null;
+            if (form.Image != null)
             {
-                using (var fileStream = new FileStream("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + "\\img\\user\\" + form.Image.FileName, FileMode.Create))
-                {
-                    await form.Image.CopyToAsync(fileStream);
-                }
+                img = await _fileService.CreateImage(form.Image);
             }
             if (id != null)
             {
                 var user = _userService.users.Find(us => us.Id == id);
-                if (user?.Image != null && _userService.users.Where(us => us.Image?.Path == user.Image.Path).Count()==1)
+                if (user?.Image != null)
                 {
-                    System.IO.File.Delete("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + user.Image.Path);
+                    _fileService.DeleteImage(user.Image);
                 }
                 form.Id = id.Value;
             }
             else form.Id = _userService.users.Count == 0 ? 0 : _userService.users.Last().Id + 1;
 
-            await _userService.AddOrEdit(form);
+            await _userService.AddOrEdit(form, img);
             return RedirectToAction("UsersList");
         }
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = _userService.users.Find(us => us.Id == id);
-            if (user?.Image != null && _userService.users.Where(us => us.Image.Path == user.Image.Path).Count() == 1)
+            if (user?.Image != null)
             {
-                System.IO.File.Delete("D:\\SHAG\\visual save\\firstMVC\\wwwroot" + user.Image.Path);
+                _fileService.DeleteImage(user.Image);
             }
             _userService.users.Remove(user);
             await _userService.SaveAsync();

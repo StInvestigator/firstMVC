@@ -6,9 +6,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\img\skill\" />
-    <Folder Include="wwwroot\img\user\" />
-  </ItemGroup>
-
 </Project>

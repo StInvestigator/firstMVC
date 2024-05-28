@@ -1,1 +1,1 @@
-[{"Id":0,"Name":"123123","Age":12,"IsMale":true,"Balance":0,"Birthday":"0001-01-01T00:00:00","ProfessionId":0,"Skills":[],"Image":null}]
+[{"Id":0,"Name":"12","Age":0,"IsMale":false,"Balance":0,"Birthday":"0001-01-01T00:00:00","ProfessionId":0,"Skills":[{"Skill":{"Id":0,"Name":"123123","Image":null},"Mastery":33}],"Image":null}]

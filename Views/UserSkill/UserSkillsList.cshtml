@@ -23,7 +23,7 @@
             {
         <tr>
             <th scope="row">@item.Skill.Id</th>
-            <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:5px" src="@(item.Skill.Image==null?"/img/default/Gigachad.jpg":item.Skill.Image.Path)"/></th>
+                            <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:5px" src="/uploads/img/@(item.Skill.Image==null?"default/Gigachad.jpg": "/" + item.Skill.Image.Path[0] + "/" + item.Skill.Image.Path[1] + "/" + item.Skill.Image.Path)" /></th>
             <td>@item.Skill.Name</td>
             <td style="width:250px">
                 <div class="progress" style="width:250px; height:20px; margin-top:5px">
