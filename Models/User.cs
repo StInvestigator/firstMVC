@@ -15,5 +15,6 @@ namespace firstMVC.Models
         [DisplayName("Навички")]
         public List<UserSkill>? Skills { get; set; }
         public Image? Image { get; set; }
+        public List<Image>? Gallery { get; set; }
     }
 }

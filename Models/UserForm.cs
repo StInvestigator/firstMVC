@@ -5,7 +5,10 @@ namespace firstMVC.Models
 {
     public class UserForm
     {
-        public UserForm() { }
+        public UserForm() 
+        {
+            Gallery = new List<IFormFile>();
+        }
         public UserForm(User user) 
         {
             Id = user.Id;
@@ -47,5 +50,8 @@ namespace firstMVC.Models
 
         [DisplayName("Аватарка")]
         public IFormFile? Image { get; set; }
+
+        [DisplayName("Мої зображення")]
+        public List<IFormFile> Gallery { get; set; }
     }
 }

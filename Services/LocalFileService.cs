@@ -14,13 +14,13 @@ namespace firstMVC.Services
             string dir1 = filename[0].ToString();
             string dir2 = filename[1].ToString();
             string directory = Path.Combine(_root, dir1, dir2);
-             return Path.Combine(directory, filename);
+            return Path.Combine(directory, filename);
         }
         public async Task<Image> CreateImage(IFormFile file)
         {
             var filename = Guid.NewGuid().ToString().ToLower() + Path.GetExtension(file.FileName);
             var filePath = GetFullPath(filename);
-            Directory.CreateDirectory(filePath.Substring(0, filePath.Length - filePath.Split("\\").Last().Length - 1));
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             using(var newFile = File.OpenWrite(filePath))
             {
                 await file.CopyToAsync(newFile);
@@ -28,15 +28,15 @@ namespace firstMVC.Services
 
             return new Image
             {
-                Name = file.FileName,
-                Path = filename,
+                Name = filename,
+                Path = Path.Combine("\\uploads", "img", filename[0].ToString(), filename[1].ToString(), filename),
+                OriginalName = Path.GetFileNameWithoutExtension(file.FileName)
             };
         }
         public void DeleteImage(Image file) 
         {
-            var fullpath = GetFullPath(file.Path);
-
-            if (File.Exists(fullpath)) File.Delete(fullpath);
+            var fullPath = GetFullPath(file.Name);
+            if (File.Exists(fullPath)) File.Delete(fullPath);
         }
     }
 }

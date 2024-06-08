@@ -32,7 +32,7 @@ namespace firstMVC.Services
             await SaveAsync();
         }
 
-        public async Task AddOrEdit(UserForm form, Image? img)
+        public async Task AddOrEdit(UserForm form, Image? img, List<Image>? gallery)
         {
             await AddOrEdit(new User
             {
@@ -43,7 +43,8 @@ namespace firstMVC.Services
                 Birthday = form.Birthday,
                 IsMale = form.IsMale,
                 ProfessionId = form.ProfessionId,
-                Image = img
+                Image = img,
+                Gallery = gallery
             });
         }
         public void UpdateSkills(Skill newSkill)

@@ -15,7 +15,7 @@
     {
         <tr>
             <th scope="row">@item.Id</th>
-                        <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:5px" src="/uploads/img/@(item.Image==null?"default/Gigachad.jpg": "/" + item.Image.Path[0] + "/" + item.Image.Path[1] + "/" + item.Image.Path)" /></th>
+                        <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:5px" src="@(item.Image==null?"/uploads/img/default/Gigachad.jpg": item.Image.Path)" /></th>
             <td>@item.Name</td>
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Skill" asp-action="SkillForm" asp-route-id=@item.Id>Edit</a></button></td>
             <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="Skill" asp-action="DeleteSkill" asp-route-id=@item.Id>Delete</a></button></td>

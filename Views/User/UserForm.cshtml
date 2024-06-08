@@ -53,6 +53,12 @@
             @Html.ValidationMessageFor(x => x.Image)
             <br />
         </span>
+        <label asp-for="Gallery" class="form-label"></label>
+        <input asp-for="Gallery" class="form-control" type="file" accept="image/*" multiple>
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Image)
+            <br />
+        </span>
     </div>
     <button type="submit" class="btn btn-outline-success">Відправити</button>
 </form>
