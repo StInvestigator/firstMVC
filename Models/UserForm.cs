@@ -17,7 +17,7 @@ namespace firstMVC.Models
             IsMale = user.IsMale;
             Balance = user.Balance;
             Birthday = user.Birthday;
-            ProfessionId = user.ProfessionId;
+            ProfessionId = user.Profession==null?-1:user.Profession.Id;
         }
         public int Id { get; set; }
 

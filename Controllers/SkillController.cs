@@ -1,23 +1,24 @@
 ﻿using firstMVC.Models;
 using firstMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Controllers
 {
-    public class SkillController (SkillService _skillService, UserService _userService, LocalFileService _fileService) : Controller
+    public class SkillController (SiteContext _context, LocalFileService _fileService) : Controller
     {
-        public IActionResult SkillsList()
+        public async Task<IActionResult> SkillsList()
         {
-            return View(_skillService.skills);
+            return View(await _context.Skills.Include(x => x.Image).ToListAsync());
         }
         [HttpGet]
-        public IActionResult SkillForm(int? id)
+        public async Task<IActionResult> SkillForm(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    return View(new SkillForm(_skillService.skills[_skillService.skills.FindIndex(us => us.Id == id)]));
+                    return View(new SkillForm((await _context.Skills.Include(x => x.Image).ToListAsync()).Find(sk => sk.Id == id)));
                 }
             }
             catch { }
@@ -32,32 +33,49 @@ namespace firstMVC.Controllers
                 return View(form);
             }
             var newSkill = new Skill {
-                Id = id != null ? id.Value : _skillService.skills.Count == 0 ? 0 : _skillService.skills.Last().Id + 1,
                 Name = form.Name,
                 Image = form.Image == null ? null : await _fileService.CreateImage(form.Image)
             };
             if (id != null)
             {
-                _userService.UpdateSkills(newSkill);
-                var skill = _skillService.skills.Find(us => us.Id == id);
+                var skill = (await _context.Skills.Include(x => x.Image).ToListAsync()).Find(us => us.Id == id);
                 if (skill?.Image != null)
                 {
                     _fileService.DeleteImage(skill.Image);
+                    _context.Remove(skill.Image);
                 }
             }
-            await _skillService.AddOrEdit(newSkill);
+            int i = (await _context.Skills.ToListAsync()).FindIndex(pr => pr.Id == id);
+
+            if (i != -1)
+            {
+                var model = await _context.Skills.Include(x => x.Image).ElementAtAsync(i);
+                model.Name = newSkill.Name;
+                model.Image = newSkill.Image;
+            }
+            else _context.Skills.Add(newSkill);
+
+            await _context.SaveChangesAsync();
             return RedirectToAction("SkillsList");
         }
         public async Task<IActionResult> DeleteSkill(int id)
         {
-            var skill = _skillService.skills.Find(us => us.Id == id);
+            var skill = (await _context.Skills.Include(x => x.Image).ToListAsync()).Find(us => us.Id == id);
             if (skill?.Image != null)
             {
                 _fileService.DeleteImage(skill.Image);
+                _context.Remove(skill.Image);
             }
-            _userService.DeleteSkills(skill);
-            _skillService.skills.Remove(skill);
-            await _skillService.SaveAsync();
+            foreach (var us in _context.Users)
+            {
+                var userSkill = us.Skills?.Find(s => s.Skill.Id == skill?.Id);
+                if (userSkill != null)
+                {
+                    us.Skills?.Remove(userSkill);
+                }
+            }
+            _context.Skills.Remove(skill);
+            await _context.SaveChangesAsync();
             return RedirectToAction("SkillsList");
         }
     }

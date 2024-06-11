@@ -1,4 +1,5 @@
 using firstMVC.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,17 +7,32 @@ builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json");
 
+
+// new
+builder.Services.AddDbContext<SiteContext>(op =>
+{
+    op.UseSqlite(x =>
+    {
+        op.UseSqlite(builder.Configuration.GetValue<string>("ConnectionStrings:Default"));
+    });
+});
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSingleton(pr => new UserService(builder.Configuration.GetValue<string>("FileStorage:UsersFilePath")));
-builder.Services.AddSingleton(pr => new ProfessionService(builder.Configuration.GetValue<string>("FileStorage:ProfessionsFilePath")));
-builder.Services.AddSingleton(pr => new SkillService(builder.Configuration.GetValue<string>("FileStorage:SkillsFilePath")));
-builder.Services.AddScoped(pr => 
+// file service
+builder.Services.AddScoped(pr =>
 {
     var enviroment = pr.GetRequiredService<IWebHostEnvironment>();
-    return new LocalFileService(Path.Combine(enviroment.WebRootPath,"uploads","img"));
+    return new LocalFileService(Path.Combine(enviroment.WebRootPath, "uploads", "img"));
 });
+
+// old
+//builder.Services.AddSingleton(pr => new UserService(builder.Configuration.GetValue<string>("FileStorage:UsersFilePath")));
+//builder.Services.AddSingleton(pr => new ProfessionService(builder.Configuration.GetValue<string>("FileStorage:ProfessionsFilePath")));
+//builder.Services.AddSingleton(pr => new SkillService(builder.Configuration.GetValue<string>("FileStorage:SkillsFilePath")));
+
 
 var app = builder.Build();
 

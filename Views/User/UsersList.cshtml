@@ -27,7 +27,7 @@
             <td>@(item.IsMale?"Чоловік":"Жінка")</td>
             <td>@item.Balance$</td>
             <td>@item.Birthday</td>
-            <td>@(item.ProfessionId==-1?"Безробітний":professions?.Find(pr=>pr.Id == item.ProfessionId)?.Name)</td>
+            <td>@(item.Profession==null?"Безробітний":item.Profession.Name)</td>
             <td style="border:none"><button class="btn btn-outline-success" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="UserGallery" asp-route-id=@item.Id>Gallery</a></button></td>
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="UserForm" asp-route-id=@item.Id>Edit</a></button></td>
             <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="DeleteUser" asp-route-id=@item.Id>Delete</a></button></td>

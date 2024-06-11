@@ -11,7 +11,7 @@ namespace firstMVC.Models
         public bool IsMale { get; set; }
         public decimal Balance { get; set; }
         public DateTime Birthday { get; set; }
-        public int ProfessionId { get; set; }
+        public Profession? Profession { get; set; }
         [DisplayName("Навички")]
         public List<UserSkill>? Skills { get; set; }
         public Image? Image { get; set; }

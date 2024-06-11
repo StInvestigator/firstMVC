@@ -28,7 +28,6 @@ namespace firstMVC.Services
                 newUser.Skills = new List<UserSkill>();
                 users.Add(newUser);
             }
-
             await SaveAsync();
         }
 
@@ -42,7 +41,7 @@ namespace firstMVC.Services
                 Balance = form.Balance,
                 Birthday = form.Birthday,
                 IsMale = form.IsMale,
-                ProfessionId = form.ProfessionId,
+                //ProfessionId = form.ProfessionId,
                 Image = img,
                 Gallery = gallery
             });

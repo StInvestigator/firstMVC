@@ -4,6 +4,7 @@ namespace firstMVC.Models
 {
     public class UserSkill
     {
+        public int Id { get; set; }
         [DisplayName("Навичка")]
         public Skill Skill { get; set; }
 

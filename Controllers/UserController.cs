@@ -1,26 +1,29 @@
 ﻿using firstMVC.Models;
 using firstMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Controllers
 {
-    public class UserController (UserService _userService, ProfessionService _professionService, LocalFileService _fileService) : Controller
+    public class UserController (SiteContext _context, LocalFileService _fileService) : Controller
     {
 
-        public IActionResult UsersList()
+        public async Task<IActionResult> UsersList()
         {
-            ViewData["professions"] = _professionService.professions;
-            return View(_userService.users);
+            ViewData["professions"] = await _context.Professions.ToListAsync();
+            return View(await _context.Users
+                .Include(x=>x.Image)
+                .ToListAsync());
         }
         [HttpGet]
-        public IActionResult UserForm(int? id)
+        public async Task<IActionResult> UserForm(int? id)
         {
-            ViewData["professions"] = _professionService.professions;
+            ViewData["professions"] = await _context.Professions.ToListAsync();
             try
             {
                 if (id != null)
                 {
-                    return View(new UserForm(_userService.users[_userService.users.FindIndex(us=>us.Id==id)]));
+                    return View(new UserForm((await _context.Users.Include(x => x.Image).ToListAsync()).Find(x=>x.Id==id)));
                 }
             }
             catch { }
@@ -32,15 +35,11 @@ namespace firstMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["professions"] = _professionService.professions;
+                ViewData["professions"] = await _context.Professions.ToListAsync();
                 return View(form);
             }
-            Image? img = null;
+            Image? img = form.Image==null ? null: await _fileService.CreateImage(form.Image);
             List<Image>? gal = null;
-            if (form.Image != null)
-            {
-                img = await _fileService.CreateImage(form.Image);
-            }
             if(form.Gallery.Count != 0)
             {
                 gal = new List<Image>();
@@ -51,45 +50,60 @@ namespace firstMVC.Controllers
             }
             if (id != null)
             {
-                var user = _userService.users.Find(us => us.Id == id);
+                form.Id = id.Value;
+                var user = (await _context.Users.Include(x=>x.Image).ToListAsync()).Find(us => us.Id == id);
                 if (user?.Image != null)
                 {
                     _fileService.DeleteImage(user.Image);
+                    _context.Remove(user.Image);
                 }
                 if (user?.Gallery != null)
                 {
                     foreach (var item in user?.Gallery)
                     {
                         _fileService.DeleteImage(item);
+                        _context.Remove(item);
                     }
                 }
-                form.Id = id.Value;
             }
-            else form.Id = _userService.users.Count == 0 ? 0 : _userService.users.Last().Id + 1;
-            await _userService.AddOrEdit(form, img, gal);
+
+            await _context.AddOrEditUser(form, img, gal);
             return RedirectToAction("UsersList");
         }
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = _userService.users.Find(us => us.Id == id);
+            var user = (await _context.Users
+                .Include(x => x.Image)
+                .Include(x => x.Gallery)
+                .Include(x=>x.Skills).ThenInclude(x=>x.Skill)
+                .ToListAsync()).Find(us => us.Id == id);
             if (user?.Image != null)
             {
                 _fileService.DeleteImage(user.Image);
+                _context.Remove(user.Image);
             }
             if(user?.Gallery != null)
             {
                 foreach (var item in user?.Gallery)
                 {
                     _fileService.DeleteImage(item);
+                    _context.Remove(item);
                 }
             }
-            _userService.users.Remove(user);
-            await _userService.SaveAsync();
+            if(user?.Skills.Count > 0)
+            {
+                foreach (var item in user?.Skills)
+                {
+                    _context.UserSkills.Remove(item);   
+                }
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
             return RedirectToAction("UsersList");
         }
-        public IActionResult UserGallery(int id)
+        public async Task<IActionResult> UserGallery(int id)
         {
-            return View(_userService.users.Find(us=>us.Id==id));
+            return View((await _context.Users.Include(x=>x.Gallery).ToListAsync()).Find(us=>us.Id==id));
         }
 
         [HttpPost]
@@ -97,12 +111,15 @@ namespace firstMVC.Controllers
         {
             try
             {
-                var user = _userService.users.First(us => us.Id == form.UserId);
+                var user = await _context.Users.Include(x => x.Image).Include(x => x.Gallery).FirstAsync(us => us.Id == form.UserId);
                 var image = user?.Gallery?[form.ImageId];
 
                 _fileService.DeleteImage(image);
-                user.Gallery.Remove(image); 
-                await _userService.SaveAsync();
+                user?.Gallery?.Remove(image); 
+
+                _context.Remove(image);
+
+                await _context.SaveChangesAsync();
                 return Json(new {OK = true});
 
             }catch(Exception ex)

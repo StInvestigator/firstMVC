@@ -1,28 +1,29 @@
 ﻿using firstMVC.Models;
 using firstMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace firstMVC.Controllers
 {
-    public class UserSkillController (UserService _userService, SkillService _skillService) : Controller
+    public class UserSkillController (SiteContext _context) : Controller
     {
-        public IActionResult UserSkillsList()
+        public async Task<IActionResult> UserSkillsList()
         {
-            return View(_userService.users);
+            return View(await _context.Users.Include(x=>x.Skills).ThenInclude(x=>x.Skill.Image).ToListAsync());
         }
         [HttpGet]
-        public IActionResult UserSkillForm(int userId,int? userSkillId)
+        public async Task<IActionResult> UserSkillForm(int userId,int? userSkillId)
         {
-            ViewData["skills"] = _skillService.skills;
-            var skills = _userService.users.Find(us => us.Id == userId)?.Skills;
+            ViewData["skills"] = await _context.Skills.ToListAsync();
+            var skills = (await _context.Users.Include(x=>x.Skills).FirstAsync(us => us.Id == userId))?.Skills;
             ViewData["userSkills"] = skills;
             ViewData["id"] = userSkillId;
             try
             {
                 if (userSkillId != null)
                 {
-                    return View(new UserSkillForm { Mastery = skills[skills.FindIndex(sk => sk.Skill.Id == userSkillId)].Mastery, SkillId = userSkillId.Value });
+                    return View(new UserSkillForm { Mastery = skills.Find(sk => sk.Skill.Id == userSkillId).Mastery, SkillId = userSkillId.Value });
                 }
             }
             catch { }
@@ -36,12 +37,12 @@ namespace firstMVC.Controllers
             {
                 return RedirectToAction("UserSkillsList");
             }
-            var skills = _userService.users.Find(us =>  us.Id == userId)?.Skills;
+            var skills = (await _context.Users.Include(x => x.Skills).ThenInclude(x=>x.Skill).FirstAsync(us =>  us.Id == userId))?.Skills;
             if (userSkillId != null)
             {
                 skills[skills.FindIndex(sk => sk.Skill.Id == userSkillId)] = new UserSkill
                 {
-                    Skill = _skillService.skills.Find(sk => sk.Id == form.SkillId),
+                    Skill = (await _context.Skills.ToListAsync()).Find(sk => sk.Id == form.SkillId),
                     Mastery = form.Mastery
                 };
             }
@@ -49,18 +50,18 @@ namespace firstMVC.Controllers
             {
                 skills.Add(new UserSkill
                 {
-                    Skill = _skillService.skills.Find(sk=>sk.Id == form.SkillId),
+                    Skill = (await _context.Skills.ToListAsync()).Find(sk => sk.Id == form.SkillId),
                     Mastery = form.Mastery
                 });
             }
-            await _userService.SaveAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction("UserSkillsList");
         }
         public async Task<IActionResult> DeleteUserSkill(int userId, int userSkillId)
         {
-            var skills = _userService.users.Find(us => us.Id == userId)?.Skills;
+            var skills = (await _context.Users.Include(x => x.Skills).ThenInclude(x => x.Skill).FirstAsync(us => us.Id == userId))?.Skills;
             skills.Remove(skills.Find(sk => sk.Skill.Id == userSkillId));
-            await _userService.SaveAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction("UserSkillsList");
         }
     }

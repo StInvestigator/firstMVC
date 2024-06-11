@@ -1,23 +1,24 @@
 ﻿using firstMVC.Models;
 using firstMVC.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Controllers
 {
-    public class ProfessionController (UserService _userService, ProfessionService _professionService, LocalFileService _fileService) : Controller
+    public class ProfessionController (SiteContext _context, LocalFileService _fileService) : Controller
     {
-        public IActionResult ProfessionsList()
+        public async Task<IActionResult> ProfessionsList()
         {
-            return View(_professionService.professions);
+            return View(await _context.Professions.Include(x=>x.Image).ToListAsync());
         }
         [HttpGet]
-        public IActionResult ProfessionForm(int? id)
+        public async Task<IActionResult> ProfessionForm(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    return View(new ProfessionForm(_professionService.professions[id.Value]));
+                    return View(new ProfessionForm((await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr=>pr.Id == id)));
                 }
             }
             catch { }
@@ -33,34 +34,41 @@ namespace firstMVC.Controllers
             }
             Profession newProfession = new Profession
             {
-                Id = id != null ? id.Value : _professionService.professions.Count == 0 ? 0 : _professionService.professions.Last().Id + 1,
                 Name = form.Name,
                 Image = form.Image==null ? null : await _fileService.CreateImage(form.Image)
             };
             if(id!=null)
             {
-                var pro = _professionService.professions.Find(pr => pr.Id == id);
+                var pro = (await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr => pr.Id == id);
                 if (pro?.Image != null)
                 {
                     _fileService.DeleteImage(pro.Image);
+                    _context.Remove(pro.Image);
                 }
             }
-            await _professionService.AddOrEdit(newProfession);
+            int i = _context.Professions.ToList().FindIndex(pr => pr.Id == id);
+
+            if (i != -1) 
+            {
+                var model = await _context.Professions.Include(x => x.Image).ElementAtAsync(i);
+                model.Name = newProfession.Name;
+                model.Image = newProfession.Image;
+            }
+            else _context.Professions.Add(newProfession);
+
+            await _context.SaveChangesAsync();
             return RedirectToAction("ProfessionsList");
         }
         public async Task<IActionResult> DeleteProfession(int id)
         {
-            foreach (var item in _userService.users.Where(us => us.ProfessionId == id))
-            {
-                item.ProfessionId = -1;
-            }
-            var pro = _professionService.professions.Find(pr => pr.Id == id);
+            var pro = (await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr => pr.Id == id);
             if(pro?.Image != null)
             {
                 _fileService.DeleteImage(pro.Image);
+                _context.Remove(pro.Image);
             }
-            _professionService.professions.Remove(pro);
-            await _professionService.SaveAsync();
+            _context.Professions.Remove(pro);
+            await _context.SaveChangesAsync();
             return RedirectToAction("ProfessionsList");
         }
     }
