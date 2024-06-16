@@ -89,6 +89,7 @@
                 if (data.ok) {
                     myModal.hide()
                     Swal.fire(success, "", "success").then(() => {
+                        window.location.reload()
                     });
                 }
                 else {
