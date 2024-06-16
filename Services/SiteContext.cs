@@ -1,4 +1,5 @@
 ﻿using firstMVC.Models;
+using firstMVC.Models.Forms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 

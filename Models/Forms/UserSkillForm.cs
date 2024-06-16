@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace firstMVC.Models
+namespace firstMVC.Models.Forms
 {
     public class UserSkillForm
     {

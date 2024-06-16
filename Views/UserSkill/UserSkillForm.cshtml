@@ -1,4 +1,5 @@
-﻿@model UserSkillForm
+﻿@using firstMVC.Models.Forms
+@model UserSkillForm
 @{
     var selectItems = (ViewData["skills"] as List<Skill>)
     .Where(sk => (ViewData["userSkills"] as List<UserSkill>).Find(us => us.Skill.Id == sk.Id && us.Skill.Id != ViewData["id"] as int?) == null)

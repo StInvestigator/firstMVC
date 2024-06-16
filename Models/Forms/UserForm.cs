@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace firstMVC.Models
+namespace firstMVC.Models.Forms
 {
     public class UserForm
     {
-        public UserForm() 
+        public UserForm()
         {
             Gallery = new List<IFormFile>();
         }
-        public UserForm(User user) 
+        public UserForm(User user)
         {
             Id = user.Id;
             Name = user.Name;
@@ -17,7 +17,7 @@ namespace firstMVC.Models
             IsMale = user.IsMale;
             Balance = user.Balance;
             Birthday = user.Birthday;
-            ProfessionId = user.Profession==null?-1:user.Profession.Id;
+            ProfessionId = user.Profession == null ? -1 : user.Profession.Id;
         }
         public int Id { get; set; }
 

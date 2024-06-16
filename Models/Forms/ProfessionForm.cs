@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace firstMVC.Models
+namespace firstMVC.Models.Forms
 {
-    public class SkillForm
+    public class ProfessionForm
     {
-        public SkillForm() { }
-        public SkillForm(Skill skill)
+        public ProfessionForm() { }
+        public ProfessionForm(Profession profession)
         {
-            Id = skill.Id;
-            Name = skill.Name;
+            Id = profession.Id;
+            Name = profession.Name;
         }
         public int Id { get; set; }
 
         [DisplayName("Назва")]
-        [Required(ErrorMessage = "Назва необхідна")]
+        [Required(ErrorMessage = "Професія необхідна")]
         public string Name { get; set; }
 
         [DisplayName("Лого")]

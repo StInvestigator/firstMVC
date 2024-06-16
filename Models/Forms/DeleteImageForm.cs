@@ -1,4 +1,4 @@
-﻿namespace firstMVC.Models
+﻿namespace firstMVC.Models.Forms
 {
     public class DeleteImageForm
     {

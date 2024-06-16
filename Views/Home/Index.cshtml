@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using firstMVC.Models.Forms
+@model List<User>?
+
+@{
+    var searchForm = ViewData["SearchForm"] as HomeSearchForm;
+    ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@await Html.PartialAsync("_HomeSearchForm", searchForm)
+
+<div class="row">
+    @foreach(User item in Model)
+    {
+    <div class="col-md-4">
+        <div class="card mb-2">
+            <img style="width:80px; height:80px; border-radius:100%; margin:5px auto 0" src="@(item.Image==null?"/uploads/img/default/Gigachad.jpg": item.Image.Path)" />
+            <div class="card-body text-center">
+                <h5 class="card-title">@item.Name</h5>
+                <div class="badge bg-dark" style="margin: 0 auto; display:block">@(item.Profession==null?"Безробітний":item.Profession.Name)</div>
+                <p >@item.Birthday.ToShortDateString()</p>
+                <p>0<i class="fa fa-star" style="color:darkgoldenrod;" aria-hidden="true"></i></p>
+                <button class="btn btn-outline-success" style="width:100%; padding:0">Відгуки</button>
+                <button class="btn btn-outline-primary" style="width:100%; padding:0">Залишии відгук</button>
+            </div>
+        </div>
+    </div>
+    }
 </div>

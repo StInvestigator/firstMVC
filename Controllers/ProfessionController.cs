@@ -1,4 +1,5 @@
 ﻿using firstMVC.Models;
+using firstMVC.Models.Forms;
 using firstMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
