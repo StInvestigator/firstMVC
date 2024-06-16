@@ -3,7 +3,7 @@
 @{
     var user = Model as User;
 
-    if (user?.Gallery != null && user?.Gallery.Count!=0)
+    if (user?.Gallery.Count!=0)
     {
         <h2>Галерея користувача @user.Name</h2>
 
@@ -54,7 +54,7 @@
 @section Scripts {
     <script type="text/javascript">
         $(".confirm-action").on("click", e => {
-
+            
             e.preventDefault()
             let target = $(e.target)
             let confirm = target.data("confirm-message")

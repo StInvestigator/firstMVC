@@ -1,28 +1,81 @@
 ﻿@using firstMVC.Models.Forms
 @model List<User>?
-
 @{
     var searchForm = ViewData["SearchForm"] as HomeSearchForm;
     ViewData["Title"] = "Home page";
 }
 
+@* Stars *@
+
+<style>
+    i.fa-star:not([selected]) {
+        color: black;
+    }
+
+    i.fa-star[selected] {
+        color: darkgoldenrod;
+    }
+</style>
+
+@* Search *@
+
 @await Html.PartialAsync("_HomeSearchForm", searchForm)
+
+@* Modal *@
+
+<div class="modal fade" id="review-form-modal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        
+    </div>
+</div>
+
+@* Main Cards *@
 
 <div class="row">
     @foreach(User item in Model)
     {
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="card mb-2">
             <img style="width:80px; height:80px; border-radius:100%; margin:5px auto 0" src="@(item.Image==null?"/uploads/img/default/Gigachad.jpg": item.Image.Path)" />
             <div class="card-body text-center">
                 <h5 class="card-title">@item.Name</h5>
                 <div class="badge bg-dark" style="margin: 0 auto; display:block">@(item.Profession==null?"Безробітний":item.Profession.Name)</div>
                 <p >@item.Birthday.ToShortDateString()</p>
-                <p>0<i class="fa fa-star" style="color:darkgoldenrod;" aria-hidden="true"></i></p>
-                <button class="btn btn-outline-success" style="width:100%; padding:0">Відгуки</button>
-                <button class="btn btn-outline-primary" style="width:100%; padding:0">Залишии відгук</button>
+                <p>@((item?.Reviews == null || item?.Reviews.Count==0) ? 0 :Math.Round((decimal)item?.Reviews.Average(x => x.Rating),1)) <i class="fa fa-star" style="color:darkgoldenrod;" aria-hidden="true"></i></p>
+                <button class="view-reviews btn btn-outline-success" style="width:100%; padding:0" data-id="@item?.Id">Відгуки</button>
+                <button class="add-review btn btn-outline-primary" style="width:100%; padding:0" data-id="@item?.Id">Залишии відгук</button>
             </div>
         </div>
     </div>
     }
 </div>
+
+
+@section Scripts{
+    <script>
+
+        var selectedRate;
+
+        var myModal = new bootstrap.Modal(document.getElementById('review-form-modal'), {
+            keyboard: false
+        })
+
+        $('button.add-review')
+            .on('click', e => {
+                let id = $(e.target).data('id')
+                fetch(`/Review/ReviewModalAjax/${id}`).then(r => r.text()).then(html => {
+                    $('#review-form-modal .modal-dialog').html(html)
+                    myModal.show()
+                })
+            })
+
+        $('button.view-reviews')
+            .on('click', e => {
+                let id = $(e.target).data('id')
+                fetch(`/Review/ReviewsListAjax/${id}`).then(r => r.text()).then(html => {
+                    $('#review-form-modal .modal-dialog').html(html)
+                    myModal.show()
+                })
+            })
+    </script>
+}

@@ -40,10 +40,9 @@ namespace firstMVC.Controllers
                 return View(form);
             }
             Image? img = form.Image==null ? null: await _fileService.CreateImage(form.Image);
-            List<Image>? gal = null;
+            List<Image> gal = new List<Image>();
             if(form.Gallery.Count != 0)
             {
-                gal = new List<Image>();
                 foreach (var item in form.Gallery)
                 {
                     gal.Add(await _fileService.CreateImage(item));
@@ -52,20 +51,19 @@ namespace firstMVC.Controllers
             if (id != null)
             {
                 form.Id = id.Value;
-                var user = (await _context.Users.Include(x=>x.Image).ToListAsync()).Find(us => us.Id == id);
+                var user = (await _context.Users.Include(x => x.Image).ToListAsync()).Find(us => us.Id == id);
                 if (user?.Image != null)
                 {
                     _fileService.DeleteImage(user.Image);
                     _context.Remove(user.Image);
                 }
-                if (user?.Gallery != null)
+
+                foreach (var item in user.Gallery)
                 {
-                    foreach (var item in user?.Gallery)
-                    {
-                        _fileService.DeleteImage(item);
-                        _context.Remove(item);
-                    }
+                    _fileService.DeleteImage(item);
+                    _context.Remove(item);
                 }
+
             }
 
             await _context.AddOrEditUser(form, img, gal);
@@ -76,28 +74,28 @@ namespace firstMVC.Controllers
             var user = (await _context.Users
                 .Include(x => x.Image)
                 .Include(x => x.Gallery)
-                .Include(x=>x.Skills).ThenInclude(x=>x.Skill)
+                .Include(x => x.Skills).ThenInclude(x => x.Skill)
                 .ToListAsync()).Find(us => us.Id == id);
             if (user?.Image != null)
             {
                 _fileService.DeleteImage(user.Image);
                 _context.Remove(user.Image);
             }
-            if(user?.Gallery != null)
+            foreach (var item in user.Gallery)
             {
-                foreach (var item in user?.Gallery)
-                {
-                    _fileService.DeleteImage(item);
-                    _context.Remove(item);
-                }
+                _fileService.DeleteImage(item);
+                _context.Remove(item);
             }
-            if(user?.Skills.Count > 0)
+            foreach (var item in user.Reviews)
             {
-                foreach (var item in user?.Skills)
-                {
-                    _context.UserSkills.Remove(item);   
-                }
+                _context.Remove(item);
             }
+
+            foreach (var item in user.Skills)
+            {
+                _context.UserSkills.Remove(item);
+            }
+
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction("UsersList");

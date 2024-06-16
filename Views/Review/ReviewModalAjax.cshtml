@@ -1,0 +1,100 @@
+﻿@model User
+
+<style>
+    i.fa-star:hover {
+        cursor: pointer
+    }
+</style>
+
+@* Model *@
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="formModalLabel">Відгук до @Model.Name</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="mb-3">
+            <label class="form-label">Ваше ім'я</label>
+            <input type="text" class="review-form-name form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Оцінка</label>
+            <div class="rate-select d-flex w-50" style="justify-content:space-around; font-size:20px">
+                <div><i class="fa fa-2x fa-star" data-id="1"></i></div>
+                <div><i class="fa fa-2x fa-star" data-id="2"></i></div>
+                <div><i class="fa fa-2x fa-star" data-id="3"></i></div>
+                <div><i class="fa fa-2x fa-star" data-id="4"></i></div>
+                <div><i class="fa fa-2x fa-star" data-id="5"></i></div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Відгук</label>
+            <textarea class="review-form-text form-control" rows="3" style="resize:none"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+        <button type="button" class="send-review btn btn-primary"
+            data-success-message="Відгук було надіслано"
+            data-error-message="Сталася помилка"
+            asp-controller="Review"
+            asp-action="AddReview"
+            asp-route-id="@Model.Id"
+        >Залишити відгук</button>
+    </div>
+</div>
+
+
+
+<script>
+    selectedRate = 0
+
+    function updateStarsSelection() {
+        $('.rate-select [data-id]').each((i, e) => {
+            let el = $(e)
+            el.attr('selected', (Number(el.data('id')) <= selectedRate))
+        })
+    }
+
+    $('.rate-select [data-id]')
+        .attr('selected', false)
+        .on('click', e => {
+            let el = $(e.target)
+            selectedRate = Number(el.data('id'))
+
+            updateStarsSelection()
+        })
+
+    $('button.send-review').on('click', e => {
+        let target = $(e.target)
+        let url = target.attr('formaction')
+        let success = target.data("success-message")
+        let error = target.data("error-message")
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(
+                {
+                    Name: $('input.review-form-name').val(),
+                    Text: $('textarea.review-form-text').val(),
+                    Rating: selectedRate
+                }
+            )
+        }).then(d => d.json())
+            .then(data => {
+                if (data.ok) {
+                    myModal.hide()
+                    Swal.fire(success, "", "success").then(() => {
+                    });
+                }
+                else {
+                    Swal.fire(error, "", "error");
+                }
+            })
+    })
+
+</script>

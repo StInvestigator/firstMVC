@@ -23,6 +23,7 @@ namespace firstMVC.Controllers
                 || (x.Profession==null? "Безробітний".Contains(form.Text) : x.Profession.Name.Contains(form.Text)))
                 .Include(x=>x.Profession)
                 .Include(x=>x.Image)
+                .Include(x=>x.Reviews)
                 .ToListAsync();
             return View(data);
         }

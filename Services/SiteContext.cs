@@ -14,6 +14,7 @@ namespace firstMVC.Services
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserSkill> UserSkills { get; set; }
         public virtual DbSet<Image> Images { get; set; }
+        public virtual DbSet<Review> Reviews { get; set; }
 
         public async Task AddOrEditUser(User newUser)
         {
@@ -31,13 +32,12 @@ namespace firstMVC.Services
             }
             catch 
             {
-                newUser.Skills = new List<UserSkill>();
                 Users.Add(newUser);
             }
             await SaveChangesAsync();
         }
 
-        public async Task AddOrEditUser(UserForm form, Image? img, List<Image>? gallery)
+        public async Task AddOrEditUser(UserForm form, Image? img, List<Image> gallery)
         {
             await AddOrEditUser(new User
             {
