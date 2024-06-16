@@ -74,6 +74,7 @@ namespace firstMVC.Controllers
             var user = (await _context.Users
                 .Include(x => x.Image)
                 .Include(x => x.Gallery)
+                .Include(x=>x.Reviews)
                 .Include(x => x.Skills).ThenInclude(x => x.Skill)
                 .ToListAsync()).Find(us => us.Id == id);
             if (user?.Image != null)
