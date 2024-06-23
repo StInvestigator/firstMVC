@@ -1,12 +1,14 @@
 ﻿using firstMVC.Models;
 using firstMVC.Models.Forms;
 using firstMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace firstMVC.Controllers
 {
+    [Authorize]
     public class UserSkillController (SiteContext _context) : Controller
     {
         public async Task<IActionResult> UserSkillsList()

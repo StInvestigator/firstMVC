@@ -4,14 +4,14 @@ using firstMVC.Services.Interfases;
 using System.IO;
 using System.Text.Json;
 
-namespace firstMVC.Services
+namespace firstMVC.Services.Old
 {
     public class UserService : IListSaveLoadEditAsync<User>
     {
         private string _filePath;
         public List<User> users { get; private set; }
 
-        public UserService(string filePath) 
+        public UserService(string filePath)
         {
             _filePath = filePath;
             LoadAsync().Wait();
@@ -71,7 +71,7 @@ namespace firstMVC.Services
         }
         public async Task LoadAsync()
         {
-            if(File.Exists(_filePath))
+            if (File.Exists(_filePath))
             {
                 var file = File.OpenRead(_filePath);
                 users = await JsonSerializer.DeserializeAsync<List<User>>(file);

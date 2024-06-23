@@ -1,11 +1,13 @@
 ﻿using firstMVC.Models;
 using firstMVC.Models.Forms;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace firstMVC.Services
 {
-    public class SiteContext : DbContext
+    public class SiteContext : IdentityDbContext<Customer,IdentityRole<int>,int>
     {
         public SiteContext(DbContextOptions<SiteContext> options) : base(options) { }
 

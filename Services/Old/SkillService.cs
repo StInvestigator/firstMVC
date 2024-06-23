@@ -3,13 +3,13 @@ using firstMVC.Services.Interfases;
 using System.IO;
 using System.Text.Json;
 
-namespace firstMVC.Services
+namespace firstMVC.Services.Old
 {
     public class SkillService : IListSaveLoadEditAsync<Skill>
     {
         private string _filePath;
         public List<Skill> skills { get; private set; }
-        public SkillService(string filePath) 
+        public SkillService(string filePath)
         {
             _filePath = filePath;
             LoadAsync().Wait();
@@ -30,7 +30,7 @@ namespace firstMVC.Services
         }
         public async Task LoadAsync()
         {
-            if(File.Exists(_filePath))
+            if (File.Exists(_filePath))
             {
                 var file = File.OpenRead(_filePath);
                 skills = await JsonSerializer.DeserializeAsync<List<Skill>>(file);
@@ -38,7 +38,7 @@ namespace firstMVC.Services
             }
             else
             {
-                skills = new List<Skill> ();
+                skills = new List<Skill>();
             }
         }
         public async Task SaveAsync()

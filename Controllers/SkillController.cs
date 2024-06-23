@@ -1,11 +1,13 @@
 ﻿using firstMVC.Models;
 using firstMVC.Models.Forms;
 using firstMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Controllers
 {
+    [Authorize]
     public class SkillController (SiteContext _context, LocalFileService _fileService) : Controller
     {
         public async Task<IActionResult> SkillsList()
