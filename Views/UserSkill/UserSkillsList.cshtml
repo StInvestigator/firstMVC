@@ -1,4 +1,8 @@
-﻿@{
+﻿@using System.Text.Json
+@using firstMVC.Models.Forms
+@{
+    ViewData["Title"] = "Список навичок користувачей";
+
     var users = Model as List<User>;
     if (users?.Count != 0)
     {
@@ -33,7 +37,16 @@
                 </div>
             </td>
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="UserSkill" asp-action="UserSkillForm" asp-route-userId=@user.Id asp-route-userSkillId=@item.Skill.Id>Edit</a></button></td>
-            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="UserSkill" asp-action="DeleteUserSkill" asp-route-userId=@user.Id asp-route-userSkillId=@item.Skill.Id>Delete</a></button></td>
+            <td style="border:none"><button 
+            class="btn btn-outline-danger confirm-action" 
+            style="width:100%; padding:0" 
+            asp-controller="UserSkill" 
+            asp-action="DeleteUserSkill" 
+            data-confirm-message="Ви дійсно хочете видалити цю навичку?"
+            data-success-message="Навичку було видалено"
+            data-error-message="Навичка не може бути видалена"
+            data-body="@JsonSerializer.Serialize(new DeleteEntityByDoubleIdForm{firstId=user.Id, secondId=item.Skill.Id})"
+            >Delete</button></td>
         </tr>
             }
     </tbody>

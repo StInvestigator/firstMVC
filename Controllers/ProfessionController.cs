@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 namespace firstMVC.Controllers
 {
     [Authorize]
-    public class ProfessionController (SiteContext _context, LocalFileService _fileService) : Controller
+    public class ProfessionController(SiteContext _context, LocalFileService _fileService) : Controller
     {
         public async Task<IActionResult> ProfessionsList()
         {
-            return View(await _context.Professions.Include(x=>x.Image).ToListAsync());
+            return View(await _context.Professions.Include(x => x.Image).ToListAsync());
         }
         [HttpGet]
         public async Task<IActionResult> ProfessionForm(int? id)
@@ -21,7 +21,7 @@ namespace firstMVC.Controllers
             {
                 if (id != null)
                 {
-                    return View(new ProfessionForm((await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr=>pr.Id == id)));
+                    return View(new ProfessionForm((await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr => pr.Id == id)));
                 }
             }
             catch { }
@@ -38,9 +38,9 @@ namespace firstMVC.Controllers
             Profession newProfession = new Profession
             {
                 Name = form.Name,
-                Image = form.Image==null ? null : await _fileService.CreateImage(form.Image)
+                Image = form.Image == null ? null : await _fileService.CreateImage(form.Image)
             };
-            if(id!=null)
+            if (id != null)
             {
                 var pro = (await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr => pr.Id == id);
                 if (pro?.Image != null)
@@ -51,7 +51,7 @@ namespace firstMVC.Controllers
             }
             int i = _context.Professions.ToList().FindIndex(pr => pr.Id == id);
 
-            if (i != -1) 
+            if (i != -1)
             {
                 var model = await _context.Professions.Include(x => x.Image).ElementAtAsync(i);
                 model.Name = newProfession.Name;
@@ -62,17 +62,29 @@ namespace firstMVC.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("ProfessionsList");
         }
-        public async Task<IActionResult> DeleteProfession(int id)
+        public async Task<IActionResult> DeleteProfession([FromBody] DeleteEntityByIdForm form)
         {
-            var pro = (await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr => pr.Id == id);
-            if(pro?.Image != null)
+            try
             {
-                _fileService.DeleteImage(pro.Image);
-                _context.Remove(pro.Image);
+                var pro = (await _context.Professions.Include(x => x.Image).ToListAsync()).Find(pr => pr.Id == form.Id);
+                if (pro?.Image != null)
+                {
+                    _fileService.DeleteImage(pro.Image);
+                    _context.Remove(pro.Image);
+                }
+                foreach (var item in _context.Users.Include(x=>x.Profession).Where(x=>x.Profession==pro))
+                {
+                    item.Profession = null;
+                }
+                _context.Professions.Remove(pro);
+                await _context.SaveChangesAsync();
+                return Json(new { OK = true });
+
             }
-            _context.Professions.Remove(pro);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("ProfessionsList");
+            catch (Exception ex)
+            {
+                return Json(new { OK = false });
+            }
         }
     }
 }

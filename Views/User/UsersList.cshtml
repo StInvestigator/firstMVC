@@ -1,4 +1,8 @@
-﻿@{
+﻿@using System.Text.Json
+@using firstMVC.Models.Forms
+@{
+    ViewData["Title"] = "Список користувачей";
+
     var professions = ViewData["professions"] as List<Profession>;
     var users = Model as List<User>;
     if (users?.Count != 0)
@@ -30,7 +34,16 @@
             <td>@(item.Profession==null?"Безробітний":item.Profession.Name)</td>
             <td style="border:none"><button class="btn btn-outline-success" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="UserGallery" asp-route-id=@item.Id>Gallery</a></button></td>
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="UserForm" asp-route-id=@item.Id>Edit</a></button></td>
-            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="User" asp-action="DeleteUser" asp-route-id=@item.Id>Delete</a></button></td>
+            <td style="border:none"><button 
+            class="btn btn-outline-danger confirm-action" 
+            style="width:100%; padding:0" 
+            asp-controller="User" 
+            asp-action="DeleteUser" 
+            data-confirm-message="Ви дійсно хочете видалити користувача?"
+            data-success-message="Користувача було видалено"
+            data-error-message="Користувач не може бути видалений"
+            data-body="@JsonSerializer.Serialize(new DeleteEntityByIdForm{Id=item.Id})"
+            >Delete</button></td>
         </tr>
     }
     </tbody>
@@ -42,3 +55,4 @@
     }
     <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-controller="User" asp-action="UserForm">Додати користувача</a></button>
 }
+

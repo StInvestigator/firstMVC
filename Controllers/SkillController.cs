@@ -61,25 +61,32 @@ namespace firstMVC.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("SkillsList");
         }
-        public async Task<IActionResult> DeleteSkill(int id)
+        public async Task<IActionResult> DeleteSkill([FromBody] DeleteEntityByIdForm form)
         {
-            var skill = (await _context.Skills.Include(x => x.Image).ToListAsync()).Find(us => us.Id == id);
-            if (skill?.Image != null)
+            try
             {
-                _fileService.DeleteImage(skill.Image);
-                _context.Remove(skill.Image);
-            }
-            foreach (var us in _context.Users)
-            {
-                var userSkill = us.Skills?.Find(s => s.Skill.Id == skill?.Id);
-                if (userSkill != null)
+                var skill = (await _context.Skills.Include(x => x.Image).ToListAsync()).Find(us => us.Id == form.Id);
+                if (skill?.Image != null)
                 {
-                    us.Skills?.Remove(userSkill);
+                    _fileService.DeleteImage(skill.Image);
+                    _context.Remove(skill.Image);
                 }
+                foreach (var us in _context.Users)
+                {
+                    var userSkill = us.Skills?.Find(s => s.Skill.Id == skill?.Id);
+                    if (userSkill != null)
+                    {
+                        us.Skills?.Remove(userSkill);
+                    }
+                }
+                _context.Skills.Remove(skill);
+                await _context.SaveChangesAsync();
+                return Json(new { OK = true });
             }
-            _context.Skills.Remove(skill);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("SkillsList");
+            catch (Exception ex)
+            {
+                return Json(new { OK = false });
+            }
         }
     }
 }

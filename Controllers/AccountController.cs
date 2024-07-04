@@ -1,6 +1,7 @@
 ﻿using firstMVC.Models;
 using firstMVC.Models.Forms;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -24,9 +25,9 @@ namespace firstMVC.Controllers
                 return View(form);
             }
 
-            if (form.Password != form.ConfitmPassword)
+            if (form.Password != form.ConfirmPassword)
             {
-                ModelState.AddModelError(nameof(form.ConfitmPassword), "Паролі повинні співпадати");
+                ModelState.AddModelError(nameof(form.ConfirmPassword), "Паролі повинні співпадати");
                 return View(form);
             }
             if (await _userManager.FindByEmailAsync(form.Email) != null)
@@ -38,13 +39,13 @@ namespace firstMVC.Controllers
             var user = new Customer
             {
                 Email = form.Email,
-                UserName = form.Email
+                UserName = form.Name
             };
 
             var result = await _userManager.CreateAsync(user, form.Password);
             if (!result.Succeeded)
             {
-                ModelState.AddModelError(nameof(form.Password), string.Join("; ", result.Errors.Select(e => e.Description)));
+                ModelState.AddModelError(nameof(form.Name), string.Join("; ", result.Errors.Select(e => e.Description)));
                 return View(form);
             }
 
@@ -58,7 +59,7 @@ namespace firstMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(string? returnUrl)
+        public IActionResult Login()
         {
             return View(new LoginForm());
         }
@@ -73,12 +74,12 @@ namespace firstMVC.Controllers
 
             var user = await _userManager.FindByEmailAsync(form.Email);
 
-            if(user == null)
+            if (user == null)
             {
                 ModelState.AddModelError(nameof(form.Email), "Користувача з поштою " + form.Email + " не істнує");
                 return View(form);
             }
-            if(!await _userManager.CheckPasswordAsync(user, form.Password))
+            if (!await _userManager.CheckPasswordAsync(user, form.Password))
             {
                 ModelState.AddModelError(nameof(form.Password), "Невірний пароль");
                 return View(form);
@@ -98,10 +99,18 @@ namespace firstMVC.Controllers
             var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
 
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

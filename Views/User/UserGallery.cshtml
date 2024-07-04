@@ -1,6 +1,8 @@
 ﻿@using firstMVC.Models.Forms
 @using System.Text.Json
 @{
+    ViewData["Title"] = "Галерея користувача";
+
     var user = Model as User;
 
     if (user?.Gallery.Count!=0)
@@ -26,7 +28,7 @@
                                     data-error-message="Зображення не може бути видалене"
                                     asp-controller="User"
                                     asp-action="DeleteImage"
-                                    data-body="@JsonSerializer.Serialize(new DeleteImageForm{ImageId=i, UserId=user.Id})"
+                                    data-body="@JsonSerializer.Serialize(new DeleteEntityByDoubleIdForm{firstId=user.Id, secondId=i})"
                                     class="btn btn-outline-danger confirm-action"
                                     style="padding:2px 10px">
                                 Delete
@@ -49,50 +51,4 @@
     {
         <h4>В галареї немає зображень</h4>
     }
-}
-
-@section Scripts {
-    <script type="text/javascript">
-        $(".confirm-action").on("click", e => {
-            
-            e.preventDefault()
-            let target = $(e.target)
-            let confirm = target.data("confirm-message")
-            let success = target.data("success-message")
-            let error = target.data("error-message")
-
-            let body = target.data('body')
-            let url = target.attr('formaction')
-
-            Swal.fire({
-                title: confirm,
-                showDenyButton: false,
-                showCancelButton: true,
-                confirmButtonText: "Видалити",
-                cancelButtonText: `Закрити`
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(body)
-                    }).then(d => d.json())
-                        .then(data => {
-                            if (data.ok) {
-                                Swal.fire(success, "", "success").then(() => {
-                                    window.location.reload()
-                                });
-                            }
-                            else {
-                                Swal.fire(error, "", "error");
-                            }
-                        })
-
-                }
-            });
-        })
-    </script>
 }

@@ -1,4 +1,9 @@
-﻿@{
+﻿@using System.Text.Json
+@using firstMVC.Models.Forms
+@{
+
+    ViewData["Title"] = "Список професій";
+
     var professions = Model as List<Profession>;
     if (professions?.Count != 0)
     {
@@ -18,7 +23,16 @@
             <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:3px" src="@(item.Image==null?"/uploads/img/default/Gigachad.jpg": item.Image.Path)" /></th>
             <td>@item.Name</td>
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="ProfessionForm" asp-route-id=@item.Id>Edit</a></button></td>
-            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-controller="Profession" asp-action="DeleteProfession" asp-route-id=@item.Id>Delete</a></button></td>
+            <td style="border:none"><button 
+            class="btn btn-outline-danger confirm-action" 
+            style="width:100%; padding:0" 
+            asp-controller="Profession" 
+            asp-action="DeleteProfession" 
+            data-confirm-message="Ви дійсно хочете видалити професію?"
+            data-success-message="Професію було видалено"
+            data-error-message="Професія не може бути видалена"
+            data-body="@JsonSerializer.Serialize(new DeleteEntityByIdForm{Id=item.Id})"
+            >Delete</button></td>
         </tr>
     }
     </tbody>

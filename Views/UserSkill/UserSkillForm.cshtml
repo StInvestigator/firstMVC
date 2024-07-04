@@ -1,6 +1,8 @@
 ﻿@using firstMVC.Models.Forms
 @model UserSkillForm
 @{
+    ViewData["Title"] = "Форма навички користувача";
+
     var selectItems = (ViewData["skills"] as List<Skill>)
     .Where(sk => (ViewData["userSkills"] as List<UserSkill>).Find(us => us.Skill.Id == sk.Id && us.Skill.Id != ViewData["id"] as int?) == null)
     .Select(x => new SelectListItem {
@@ -30,3 +32,13 @@
     </div>
     <button type="submit" class="btn btn-outline-success">Відправити</button>
 </form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $.each(['mousemove', 'click'], function (k, v) {
+            $('#MasteryR').on(v, function () {
+                $('#MasteryL').text("- " + $('#MasteryR').val() + "%");
+            });
+        })
+    </script>
+}

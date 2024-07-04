@@ -39,6 +39,33 @@
                             <a class="nav-link text-dark" asp-controller="Skill" asp-action="SkillsList">Навички</a>
                         </li>
                     </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="dropstart">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            @User.Identity.Name
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                            <li><a class="dropdown-item">Лічний кабінет</a></li>
+                                            <li><a asp-controller="Customer" asp-action="CustomersList" class="dropdown-item">Користувачі сайту</a></li>
+                                            <li><hr class="dropdown-divider"/></li>
+                                            <li><a asp-controller="Account" asp-action="Logout" class="dropdown-item" style="color:red">Вийти</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Sing in <i class="fa fa-sign-in"></i></a>
+                    }
                 </div>
             </div>
         </nav>
@@ -58,6 +85,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/confirm-delete.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -2,6 +2,7 @@
 @model UserForm
 @{
     var professions = ViewData["professions"] as List<Profession>;
+    ViewData["Title"] = "Форма користувача";
 }
 <h2>User properties</h2>
 <form method="post" enctype="multipart/form-data">

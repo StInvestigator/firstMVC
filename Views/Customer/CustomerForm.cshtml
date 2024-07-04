@@ -1,9 +1,9 @@
 ﻿@using firstMVC.Models.Forms
 @model RegisterForm
 @{
-    ViewData["Title"] = "Реєстрація";
+    ViewData["Title"] = "Додавання користувача";
 }
-<h2>Реєстрація</h2>
+<h2>Додавання користувача</h2>
 <form method="post">
     <div class="mb-3">
     <label asp-for="Name" class="form-label"></label>
@@ -31,6 +31,5 @@
         <br/>
     </span>
     </div>
-    <button type="submit" class="btn btn-outline-success">Зареєструватися</button>
-    <a asp-controller="Account" asp-action="Login" asp-route-ReturnUrl="@Context.Request.Query["returnUrl"]" class="btn btn-outline-primary">В мене вже є аккаунт</a>
+    <button type="submit" class="btn btn-outline-success">Додати</button>
 </form>
