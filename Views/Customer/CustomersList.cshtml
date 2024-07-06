@@ -21,7 +21,7 @@
         <tr>
             <th scope="row">@item.Id</th>
             <td>
-                @item.UserName
+                @item.FullName
                 @if(item.Id.ToString() == User.Claims.First(x=>x.Type == ClaimTypes.NameIdentifier).Value)
                 {
                     <span class="badge bg-success">You</span>

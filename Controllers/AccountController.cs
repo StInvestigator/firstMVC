@@ -39,7 +39,8 @@ namespace firstMVC.Controllers
             var user = new Customer
             {
                 Email = form.Email,
-                UserName = form.Name
+                UserName = form.Email,
+                FullName = form.Name
             };
 
             var result = await _userManager.CreateAsync(user, form.Password);
@@ -98,8 +99,8 @@ namespace firstMVC.Controllers
         {
             var identity = new ClaimsIdentity(IdentityConstants.ApplicationScheme);
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-            identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.Email, user.Email??"nullEmail"));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.FullName??"nullName"));
 
             var principal = new ClaimsPrincipal(identity);
 

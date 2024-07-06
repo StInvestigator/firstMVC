@@ -1,12 +1,14 @@
 ﻿using firstMVC.Models;
 using firstMVC.Models.Forms;
 using firstMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Controllers
 {
+    [Authorize]
     public class CustomerController(UserManager<Customer> _userManager) : Controller
     {
         public async Task<IActionResult> CustomersList()
@@ -97,7 +99,8 @@ namespace firstMVC.Controllers
             var user = new Customer
             {
                 Email = form.Email,
-                UserName = form.Name
+                UserName = form.Email,
+                FullName = form.Name
             };
 
             var result = await _userManager.CreateAsync(user, form.Password);

@@ -52,7 +52,7 @@
                                             @User.Identity.Name
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                                            <li><a class="dropdown-item">Лічний кабінет</a></li>
+                                            <li><a asp-controller="Profile" asp-action="Index" class="dropdown-item">Особистий кабінет</a></li>
                                             <li><a asp-controller="Customer" asp-action="CustomersList" class="dropdown-item">Користувачі сайту</a></li>
                                             <li><hr class="dropdown-divider"/></li>
                                             <li><a asp-controller="Account" asp-action="Logout" class="dropdown-item" style="color:red">Вийти</a></li>
