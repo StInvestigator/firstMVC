@@ -1,8 +1,11 @@
-﻿@using firstMVC.Models.Forms
+﻿@using System.Security.Claims
+@using firstMVC.Models.Forms
 @model Customer
 @{
     ViewData["Title"] = "Особистий кабінет";
     var changePassword = ViewData["ChangePassword"] as ChangePasswordForm;
+
+    var roles = User.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value).ToList();
 }
 
 @* modal window *@
@@ -27,10 +30,22 @@
         <th>Електронна пошта</th>
         <td>@Model.Email</td>
     </tr>
+    <tr>
+        <th>Ролі</th>
+        <td>
+            @if(roles.Count == 0){
+                <span>Ролей немає</span>
+            }
+            @for(int i = 0; i<roles.Count; i++)
+            {
+                    @roles[i]
+                    @if (i != roles.Count - 1) {<span>,&nbsp;</span>}
+            }
+        </td>
+    </tr>
 </table>
 
 @* data change *@
-
 
 
 <button class="btn btn-outline-success" id="change-data" style="width:70%; padding:0; margin:40px auto 10px; display:block">Змінити дані</button>

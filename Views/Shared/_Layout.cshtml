@@ -32,9 +32,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="UserSkill" asp-action="UserSkillsList">Навички користувачів</a>
                         </li>
+                        @if(User.IsInRole("Admin")){
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Profession" asp-action="ProfessionsList">Професії</a>
                         </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Skill" asp-action="SkillsList">Навички</a>
                         </li>

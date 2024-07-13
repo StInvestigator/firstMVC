@@ -1,0 +1,22 @@
+﻿@using firstMVC.Models.Forms
+@model CustomerRolesForm
+@{
+    ViewData["Title"] = "Додавання ролей";
+}
+
+<h2>Додавання ролей користувачу @(ViewData["UserName"] as string)</h2>
+<form method="post" enctype="multipart/form-data">
+    <div class="mx-3 my-4">
+    @for(int i = 0; i < Model.Roles.Count; i++)
+    {   
+    <div class="mb-3">
+        <div class="form-check">
+            <input asp-for="Roles[i].Name" type="hidden"/>
+            <input asp-for="Roles[i].IsActive" class="form-check-input"/>
+            <label class="form-check-label">@Model.Roles[i].Name</label>
+        </div>
+    </div>
+    }
+    </div>
+    <button type="submit" class="btn btn-outline-success">Зберегти</button>
+</form>

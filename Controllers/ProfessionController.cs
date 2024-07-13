@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ProfessionController(SiteContext _context, LocalFileService _fileService) : Controller
     {
         public async Task<IActionResult> ProfessionsList()

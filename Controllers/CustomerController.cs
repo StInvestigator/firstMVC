@@ -72,7 +72,7 @@ namespace firstMVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CustomerForm()
+        public IActionResult CustomerForm()
         {
             return View(new RegisterForm());
         }

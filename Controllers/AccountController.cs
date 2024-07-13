@@ -11,7 +11,7 @@ namespace firstMVC.Controllers
     public class AccountController(UserManager<Customer> _userManager) : Controller
     {
         [HttpGet]
-        public IActionResult Register(string? returnUrl)
+        public IActionResult Register()
         {
             return View(new RegisterForm());
         }
@@ -60,6 +60,12 @@ namespace firstMVC.Controllers
         }
 
         [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Login()
         {
             return View(new LoginForm());
@@ -101,6 +107,12 @@ namespace firstMVC.Controllers
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Email, user.Email??"nullEmail"));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.FullName??"nullName"));
+            var userRoles = await _userManager.GetRolesAsync(user);
+            userRoles.ToList().ForEach(r =>
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, r));
+            });
+
 
             var principal = new ClaimsPrincipal(identity);
 

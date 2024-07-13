@@ -12,7 +12,7 @@
         <th scope="col">#</th>
         <th scope="col">Ім'я</th>
         <th scope="col">Пошта</th>
-        <th scope="col">Роль</th>
+        <th scope="col">Ролі</th>
     </tr>
     </thead>
      <tbody>
@@ -32,6 +32,7 @@
             @if(item.Id.ToString() != User.Claims.First(x=>x.Type == ClaimTypes.NameIdentifier).Value)
             {
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Customer" asp-action="ResetPasswordForm" asp-route-id=@item.Id>Reset Password</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-controller="Roles" asp-action="CustomerRolesForm" asp-route-id=@item.Id>Change Roles</a></button></td>
             <td style="border:none"><button 
             class="btn btn-outline-danger confirm-action" 
             style="width:100%; padding:0" 

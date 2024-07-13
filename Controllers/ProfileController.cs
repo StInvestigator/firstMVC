@@ -94,7 +94,7 @@ namespace firstMVC.Controllers
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return PartialView(currentInfo);
             }
-            if (await _userManager.FindByEmailAsync(form.Email)!=null && user.Email != form.Email) // not working
+            if (await _userManager.FindByEmailAsync(form.Email)!=null && user.Email != form.Email)
             {
                 ModelState.AddModelError(nameof(form.Email), "Користувач з поштою " + form.Email + " вже істнує");
                 HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -127,6 +127,11 @@ namespace firstMVC.Controllers
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Email, user.Email ?? "nullEmail"));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.FullName ?? "nullName"));
+            var userRoles = await _userManager.GetRolesAsync(user);
+            userRoles.ToList().ForEach(r =>
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, r));
+            });
 
             var principal = new ClaimsPrincipal(identity);
 
