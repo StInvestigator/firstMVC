@@ -323,6 +323,9 @@ namespace firstMVC.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("CreatorId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("ImageId")
                         .HasColumnType("INTEGER");
 
@@ -337,6 +340,8 @@ namespace firstMVC.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("ImageId");
 
@@ -454,6 +459,10 @@ namespace firstMVC.Migrations
 
             modelBuilder.Entity("firstMVC.Models.User", b =>
                 {
+                    b.HasOne("firstMVC.Models.Customer", "Creator")
+                        .WithMany("Users")
+                        .HasForeignKey("CreatorId");
+
                     b.HasOne("firstMVC.Models.Image", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
@@ -461,6 +470,8 @@ namespace firstMVC.Migrations
                     b.HasOne("firstMVC.Models.Profession", "Profession")
                         .WithMany()
                         .HasForeignKey("ProfessionId");
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Image");
 
@@ -480,6 +491,11 @@ namespace firstMVC.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("firstMVC.Models.Customer", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("firstMVC.Models.User", b =>

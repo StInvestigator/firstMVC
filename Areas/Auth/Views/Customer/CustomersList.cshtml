@@ -1,0 +1,58 @@
+﻿@using System.Text.Json
+@using System.Security.Claims
+@{
+    ViewData["Title"] = "Список користувачів сайту";
+    var users = Model as List<Customer>;
+    if (users?.Count != 0)
+    {
+    <table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Ім'я</th>
+        <th scope="col">Пошта</th>
+        <th scope="col">Ролі</th>
+    </tr>
+    </thead>
+     <tbody>
+    @foreach(var item in users)
+    {
+        <tr>
+            <th scope="row">@item.Id</th>
+            <td>
+                @item.FullName
+                @if(item.Id.ToString() == User.Claims.First(x=>x.Type == ClaimTypes.NameIdentifier).Value)
+                {
+                    <span class="badge bg-success">You</span>
+                }
+            </td>
+            <td>@item.Email</td>
+            <td></td>
+            @if(item.Id.ToString() != User.Claims.First(x=>x.Type == ClaimTypes.NameIdentifier).Value)
+            {
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-area="Auth" asp-controller="Customer" asp-action="ResetPasswordForm" asp-route-id=@item.Id>Reset Password</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-area="Auth" asp-controller="Roles" asp-action="CustomerRolesForm" asp-route-id=@item.Id>Change Roles</a></button></td>
+            <td style="border:none"><button 
+            class="btn btn-outline-danger confirm-action" 
+            style="width:100%; padding:0" 
+            asp-area="Auth"
+            asp-controller="Customer" 
+            asp-action="DeleteCustomer" 
+            data-confirm-message="Ви дійсно хочете видалити користувача?"
+            data-success-message="Користувача було видалено"
+            data-error-message="Користувач не може бути видалений"
+            data-body="@JsonSerializer.Serialize(new DeleteEntityByIdForm{Id=item.Id})"
+            >Delete</button></td>
+            }
+        </tr>
+    }
+    </tbody>
+    </table>
+    }
+    else
+    {
+       <h1 class="display-4 text-center">Currently there is no users</h1>
+    }
+    <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-area="Auth" asp-controller="Customer" asp-action="CustomerForm">Додати користувача</a></button>
+}
+

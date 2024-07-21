@@ -1,0 +1,47 @@
+﻿@using System.Text.Json
+
+@{
+
+    ViewData["Title"] = "Список професій";
+
+    var professions = Model as List<Profession>;
+    if (professions?.Count != 0)
+    {
+    <table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Лого</th>
+        <th scope="col">Професія</th>
+    </tr>
+    </thead>
+     <tbody>
+    @foreach(var item in professions)
+    {
+        <tr>
+            <th scope="row">@item.Id</th>
+            <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:3px" src="@(item.Image==null?"/uploads/img/default/Gigachad.jpg": item.Image.Path)" /></th>
+            <td>@item.Name</td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-area="Admin" asp-controller="Profession" asp-action="ProfessionForm" asp-route-id=@item.Id>Edit</a></button></td>
+            <td style="border:none"><button 
+            class="btn btn-outline-danger confirm-action" 
+            style="width:100%; padding:0" 
+            asp-area="Admin"
+            asp-controller="Profession" 
+            asp-action="DeleteProfession" 
+            data-confirm-message="Ви дійсно хочете видалити професію?"
+            data-success-message="Професію було видалено"
+            data-error-message="Професія не може бути видалена"
+            data-body="@JsonSerializer.Serialize(new DeleteEntityByIdForm{Id=item.Id})"
+            >Delete</button></td>
+        </tr>
+    }
+    </tbody>
+    </table>
+    }
+    else
+    {
+       <h1 class="display-4 text-center">Currently there is no professions</h1>
+    }
+    <button type="submit" class="btn btn-outline-success" style="margin:0 auto; display:block"><a class="buttonA" asp-area="Admin" asp-controller="Profession" asp-action="ProfessionForm">Додати професію</a></button>
+}

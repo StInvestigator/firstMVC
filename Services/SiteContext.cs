@@ -39,7 +39,7 @@ namespace firstMVC.Services
             await SaveChangesAsync();
         }
 
-        public async Task AddOrEditUser(UserForm form, Image? img, List<Image> gallery)
+        public async Task AddOrEditUser(UserForm form, Image? img, List<Image> gallery, Customer creator)
         {
             await AddOrEditUser(new User
             {
@@ -51,7 +51,8 @@ namespace firstMVC.Services
                 IsMale = form.IsMale,
                 Profession = form.ProfessionId == -1? null : await Professions.FirstAsync(pr=>pr.Id==form.ProfessionId),
                 Image = img,
-                Gallery = gallery
+                Gallery = gallery,
+                Creator = creator
             });
         }
 

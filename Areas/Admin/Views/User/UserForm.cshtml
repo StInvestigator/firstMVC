@@ -1,0 +1,66 @@
+﻿
+@model UserForm
+@{
+    var professions = ViewData["professions"] as List<Profession>;
+    ViewData["Title"] = "Форма користувача";
+}
+<h2>User properties</h2>
+<form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control">
+    <span style="color:red">
+        @Html.ValidationMessageFor(x => x.Name)
+        <br/>
+    </span>
+    <label asp-for="Age" class="form-label"></label>
+    <input asp-for="Age" class="form-control" type="number">
+    <span style="color:red">
+        @Html.ValidationMessageFor(x => x.Age)
+        <br />
+    </span>
+    <input asp-for="IsMale" class="form-check-input" type="checkbox">
+    <label asp-for="IsMale" class="form-label"></label>
+    <span style="color:red">
+            @Html.ValidationMessageFor(x => x.IsMale)
+        <br />
+    </span>
+    <label asp-for="Balance" class="form-label"></label>
+        <input asp-for="Balance" class="form-control" type="number" step=".01">
+    <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Balance)
+        <br />
+    </span>
+    <label asp-for="Birthday" class="form-label"></label>
+    <input asp-for="Birthday" class="form-control">
+    <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Birthday)
+        <br />
+    </span>
+        <label asp-for="ProfessionId" class="form-label"></label>
+        <select asp-for="ProfessionId" class="form-control">
+            <option value=-1>Безробітний</option>
+            @foreach(var profession in professions)
+            {
+                <option value=@profession.Id>@profession.Name</option>
+            }
+        </select>
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.ProfessionId)
+            <br />
+        </span>
+        <label asp-for="Image" class="form-label"></label>
+        <input asp-for="Image" class="form-control" type="file" accept="image/*">
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Image)
+            <br />
+        </span>
+        <label asp-for="Gallery" class="form-label"></label>
+        <input asp-for="Gallery" class="form-control" type="file" accept="image/*" multiple>
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Image)
+            <br />
+        </span>
+    </div>
+    <button type="submit" class="btn btn-outline-success">Відправити</button>
+</form>

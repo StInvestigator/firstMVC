@@ -36,6 +36,13 @@ builder.Services.AddIdentity<Customer, IdentityRole<int>>(options =>
   .AddEntityFrameworkStores<SiteContext>()
   .AddDefaultTokenProviders();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = new PathString("/Auth/Account/Login");
+    options.LogoutPath = new PathString("/Auth/Account/Logout");
+    options.AccessDeniedPath = new PathString("/Auth/Account/AccessDenied");
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -71,6 +78,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
+app.MapControllerRoute(
+    name: "MyAreas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "UserSkill",

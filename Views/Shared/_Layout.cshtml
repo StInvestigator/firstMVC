@@ -21,25 +21,34 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="AboutMe">About Me</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutMe">About Me</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="User" asp-action="UsersList">Користувачі</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="UserSkill" asp-action="UserSkillsList">Навички користувачів</a>
-                        </li>
-                        @if(User.IsInRole("Admin")){
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Profession" asp-action="ProfessionsList">Професії</a>
-                        </li>
+                        @if (User.IsInRole("User") && !User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Users" asp-controller="User" asp-action="UsersList">Користувачі</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Users" asp-controller="UserSkill" asp-action="UserSkillsList">Навички користувачів</a>
+                            </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Skill" asp-action="SkillsList">Навички</a>
-                        </li>
+                        @if(User.IsInRole("Admin")){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="User" asp-action="UsersList">Користувачі</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="UserSkill" asp-action="UserSkillsList">Навички користувачів</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Profession" asp-action="ProfessionsList">Професії</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Skill" asp-action="SkillsList">Навички</a>
+                            </li>
+                        }
                     </ul>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -54,10 +63,10 @@
                                             @User.Identity.Name
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                                            <li><a asp-controller="Profile" asp-action="Index" class="dropdown-item">Особистий кабінет</a></li>
-                                            <li><a asp-controller="Customer" asp-action="CustomersList" class="dropdown-item">Користувачі сайту</a></li>
+                                            <li><a asp-area="Auth" asp-controller="Profile" asp-action="Index" class="dropdown-item">Особистий кабінет</a></li>
+                                            <li><a asp-area="Auth" asp-controller="Customer" asp-action="CustomersList" class="dropdown-item">Користувачі сайту</a></li>
                                             <li><hr class="dropdown-divider"/></li>
-                                            <li><a asp-controller="Account" asp-action="Logout" class="dropdown-item" style="color:red">Вийти</a></li>
+                                            <li><a asp-area="Auth" asp-controller="Account" asp-action="Logout" class="dropdown-item" style="color:red">Вийти</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -66,7 +75,7 @@
                     }
                     else
                     {
-                        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Sing in <i class="fa fa-sign-in"></i></a>
+                        <a class="btn btn-outline-primary" asp-area="Auth" asp-controller="Account" asp-action="Login">Sing in <i class="fa fa-sign-in"></i></a>
                     }
                 </div>
             </div>

@@ -1,0 +1,81 @@
+﻿@model ChangeCustomerDataForm
+@{
+    
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="formModalLabel">Зміна даних</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" id="reset-data-form">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control">
+                <span style="color:red">
+                    @Html.ValidationMessageFor(x => x.Name)
+                    <br />
+                </span>
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control">
+                <span style="color:red">
+                    @Html.ValidationMessageFor(x => x.Email)
+                    <br />
+                </span>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрити</button>
+        <button class="btn btn-outline-success confirmBtn"
+                data-success-message="Дані змінені"
+                data-error-message="Сталася помилка"
+                asp-area="Auth"
+                asp-controller="Profile"
+                asp-action="ChangeDataFormModalAjax">
+            Змінити
+        </button>
+    </div>
+</div>
+
+
+
+<script>
+    $('.confirmBtn').on('click', e => {
+
+        let data = $('#reset-data-form').serializeArray().reduce((a, c) => {
+            a[c.name] = c.value
+            return a
+        }, {})
+        console.log(JSON.stringify(data))
+
+        let target = $(e.target)
+        let url = target.attr('formaction')
+        let success = target.data("success-message")
+        let error = target.data("error-message")
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }).then(d => {
+            if (d.status == 200) {
+                return d.json();
+            }
+            else {
+                throw d.text();
+            }
+        }).then(data => {
+                myModal.hide()
+                Swal.fire(success, "", "success").then(() => {
+                    window.location.reload()
+                });
+            }).catch(async err => {
+                html = await err
+                $(".modal-content").html(html);
+            })
+    })
+</script>
