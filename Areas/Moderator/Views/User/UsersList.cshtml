@@ -1,0 +1,51 @@
+﻿@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Список користувачей";
+
+    var users = Model as List<User>;
+    if (users?.Count != 0)
+    {
+    <table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Аватар</th>
+        <th scope="col">Ім'я</th>
+        <th scope="col">Вік</th>
+        <th scope="col">Стать</th>
+        <th scope="col">Баланс</th>
+        <th scope="col">День народження</th>
+        <th scope="col">Професія</th>
+        <th scope="col">Творець</th>
+        <th scope="col">Статус</th>
+    </tr>
+    </thead>
+     <tbody>
+    @foreach(var item in users)
+    {
+        <tr>
+            <th scope="row">@item.Id</th>
+            <th style="padding:2px"><img style="width:40px; height:40px; border-radius:100%; margin-left:15px" src="@(item.Image==null?"/uploads/img/default/Gigachad.jpg": item.Image.Path)" /></th>
+            <td>@item.Name</td>
+            <td>@item.Age</td>
+            <td>@(item.IsMale?"Чоловік":"Жінка")</td>
+            <td>@item.Balance$</td>
+            <td>@item.Birthday</td>
+            <td>@(item.Profession==null?"Безробітний":item.Profession.Name)</td>
+            <td>@item.Creator?.FullName</td>
+            <td>@await Html.PartialAsync("_StatusBadge",item.CurrentStatus)</td>
+            <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-area="Moderator" asp-controller="User" asp-action="UserGallery" asp-route-id=@item.Id>Галерея</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-danger" style="width:100%; padding:0"><a class="buttonA" asp-area="Moderator" asp-controller="User" asp-action="OnUserReject" asp-route-id=@item.Id>Відхилити</a></button></td>
+            <td style="border:none"><button class="btn btn-outline-success" style="width:100%; padding:0"><a class="buttonA" asp-area="Moderator" asp-controller="User" asp-action="OnUserUpload" asp-route-id=@item.Id>Ухвалити</a></button></td>
+        </tr>
+    }
+    </tbody>
+    </table>
+    }
+    else
+    {
+       <h1 class="display-4 text-center">Currently there is no users</h1>
+    }
+}
+

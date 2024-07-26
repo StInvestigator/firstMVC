@@ -45,8 +45,10 @@ namespace firstMVC.Models.Forms
         public DateTime Birthday { get; set; }
 
         [DisplayName("Професія")]
-
         public int ProfessionId { get; set; }
+
+        [DisplayName("Статус")]
+        public CurrentStatus Status { get; set; }
 
         [DisplayName("Аватарка")]
         public IFormFile? Image { get; set; }

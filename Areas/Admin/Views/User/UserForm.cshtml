@@ -3,6 +3,7 @@
 @{
     var professions = ViewData["professions"] as List<Profession>;
     ViewData["Title"] = "Форма користувача";
+    var statusesList = ViewData["Statuses"] as IEnumerable<SelectListItem>;
 }
 <h2>User properties</h2>
 <form method="post" enctype="multipart/form-data">
@@ -59,6 +60,12 @@
         <input asp-for="Gallery" class="form-control" type="file" accept="image/*" multiple>
         <span style="color:red">
             @Html.ValidationMessageFor(x => x.Image)
+            <br />
+        </span>
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" asp-items="statusesList" class="form-control"></select>
+        <span style="color:red">
+            @Html.ValidationMessageFor(x => x.Status)
             <br />
         </span>
     </div>

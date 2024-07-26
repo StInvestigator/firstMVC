@@ -4,6 +4,7 @@ using firstMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace firstMVC.Areas.Admin.Controllers
@@ -19,6 +20,7 @@ namespace firstMVC.Areas.Admin.Controllers
 
             return View(await _context.Users
                 .Include(x => x.Image)
+                .Include(x => x.Profession)
                 .Include(x => x.Creator)
                 .ToListAsync());
         }
@@ -26,6 +28,19 @@ namespace firstMVC.Areas.Admin.Controllers
         public async Task<IActionResult> UserForm(int? id)
         {
             ViewData["professions"] = await _context.Professions.ToListAsync();
+            ViewData["Statuses"] = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Value = CurrentStatus.Draft.ToString(),
+                    Text = "Чернетка"
+                },
+                new SelectListItem
+                {
+                    Value = CurrentStatus.OnModeration.ToString(),
+                    Text = "На модерацію"
+                }
+            };
             try
             {
                 if (id != null)
@@ -43,6 +58,19 @@ namespace firstMVC.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["professions"] = await _context.Professions.ToListAsync();
+                ViewData["Statuses"] = new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Value = CurrentStatus.Draft.ToString(),
+                        Text = "Чернетка"
+                    },
+                    new SelectListItem
+                    {
+                        Value = CurrentStatus.OnModeration.ToString(),
+                        Text = "На модерацію"
+                    }
+                };
                 return View(form);
             }
             Image? img = form.Image == null ? null : await _fileService.CreateImage(form.Image);

@@ -19,8 +19,8 @@ namespace firstMVC.Controllers
             }
 
             var data = await _context.Users
-                .Where(x=> x.Name.Contains(form.Text) 
-                || (x.Profession==null? "Безробітний".Contains(form.Text) : x.Profession.Name.Contains(form.Text)))
+                .Where(x=> x.Name.Contains(form.Text) || (x.Profession==null? "Безробітний".Contains(form.Text) : x.Profession.Name.Contains(form.Text)))
+                .Where(x=> x.CurrentStatus == CurrentStatus.Uploaded)
                 .Include(x=>x.Profession)
                 .Include(x=>x.Image)
                 .Include(x=>x.Reviews)

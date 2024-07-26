@@ -15,8 +15,8 @@
         <th scope="col">Вік</th>
         <th scope="col">Стать</th>
         <th scope="col">Баланс</th>
-        <th scope="col">День народження</th>
         <th scope="col">Професія</th>
+        <th scope="col">Статус</th>
     </tr>
     </thead>
      <tbody>
@@ -29,8 +29,8 @@
             <td>@item.Age</td>
             <td>@(item.IsMale?"Чоловік":"Жінка")</td>
             <td>@item.Balance$</td>
-            <td>@item.Birthday</td>
             <td>@(item.Profession==null?"Безробітний":item.Profession.Name)</td>
+            <td>@await Html.PartialAsync("_StatusBadge",item.CurrentStatus)</td>
             <td style="border:none"><button class="btn btn-outline-success" style="width:100%; padding:0"><a class="buttonA" asp-area="Users" asp-controller="User" asp-action="UserGallery" asp-route-id=@item.Id>Gallery</a></button></td>
             <td style="border:none"><button class="btn btn-outline-primary" style="width:100%; padding:0"><a class="buttonA" asp-area="Users" asp-controller="User" asp-action="UserForm" asp-route-id=@item.Id>Edit</a></button></td>
             <td style="border:none"><button 

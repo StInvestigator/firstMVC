@@ -24,5 +24,6 @@ namespace firstMVC.Models
         public List<Image> Gallery { get; set; }
         public List<Review> Reviews { get; set; }
         public Customer? Creator { get; set; }
+        public CurrentStatus CurrentStatus { get; set; }
     }
 }

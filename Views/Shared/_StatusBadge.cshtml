@@ -1,0 +1,30 @@
+﻿@model CurrentStatus
+@{
+    var badgeClass = "";
+    var statusText = "";
+    switch (Model)
+    {
+        case CurrentStatus.Draft:
+            badgeClass = "bg-light text-dark";
+            statusText = "Чернетка";
+            break;
+        case CurrentStatus.OnModeration:
+            badgeClass = "bg-warning";
+            statusText = "На модерації";
+            break;
+        case CurrentStatus.Rejected:
+            badgeClass = "bg-danger";
+            statusText = "Відхилено";
+            break;
+        case CurrentStatus.Uploaded:
+            badgeClass = "bg-success";
+            statusText = "Ухвалено";
+            break;
+        default:
+            badgeClass = "bg-dark";
+            statusText = "!!!ERROR!!!";
+            break;
+    }
+}
+
+<span class="badge @badgeClass">@statusText</span>

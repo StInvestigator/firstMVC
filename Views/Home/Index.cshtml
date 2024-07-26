@@ -40,9 +40,13 @@
                 <h5 class="card-title">@item.Name</h5>
                 <div class="badge bg-dark" style="margin: 0 auto; display:block">@(item.Profession==null?"Безробітний":item.Profession.Name)</div>
                 <p >@item.Birthday.ToShortDateString()</p>
-                <p>@((item?.Reviews == null || item?.Reviews.Count==0) ? 0 :Math.Round((decimal)item?.Reviews.Average(x => x.Rating),1)) <i class="fa fa-star" style="color:darkgoldenrod;" aria-hidden="true"></i></p>
+                <p>@((item?.Reviews == null || item?.Reviews.Count==0) ? 0 :Math.Round((decimal)item.Reviews.Where(x => x.Status == CurrentStatus.Uploaded).Average(x => x.Rating),1)) <i class="fa fa-star" style="color:darkgoldenrod;" aria-hidden="true"></i></p>
                 <button class="view-reviews btn btn-outline-success" style="width:100%; padding:0" data-id="@item?.Id">Відгуки</button>
                 <button class="add-review btn btn-outline-primary" style="width:100%; padding:0" data-id="@item?.Id">Залишии відгук</button>
+                @if (User.IsInRole("Moderator"))
+                {
+                    <button class="moderate btn btn-outline-warning" style="width:100%; padding:0" data-id="@item?.Id">Модерувати</button>
+                }
             </div>
         </div>
     </div>
@@ -72,6 +76,14 @@
             .on('click', e => {
                 let id = $(e.target).data('id')
                 fetch(`/Review/ReviewsListAjax/${id}`).then(r => r.text()).then(html => {
+                    $('#review-form-modal .modal-dialog').html(html)
+                    myModal.show()
+                })
+            })
+        $('button.moderate')
+            .on('click', e => {
+                let id = $(e.target).data('id')
+                fetch(`/Moderator/Review/ModerateAjax/${id}`).then(r => r.text()).then(html => {
                     $('#review-form-modal .modal-dialog').html(html)
                     myModal.show()
                 })

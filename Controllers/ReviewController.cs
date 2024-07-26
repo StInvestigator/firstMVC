@@ -29,6 +29,7 @@ namespace firstMVC.Controllers
                     Text = form.Text,
                     Rating = form.Rating,
                     CreatedAt = DateTime.Now,
+                    Status = CurrentStatus.OnModeration
                 };
 
                 user?.Reviews.Add(review);
@@ -44,7 +45,9 @@ namespace firstMVC.Controllers
         [HttpGet]
         public async Task<IActionResult> ReviewsListAjax(int id)
         {
-            return PartialView(await _context.Users.Include(x=>x.Reviews).FirstAsync(x => x.Id == id));
+            return PartialView(await _context.Users
+                .Include(x=>x.Reviews)
+                .FirstAsync(x => x.Id == id));
         }
     }
 }

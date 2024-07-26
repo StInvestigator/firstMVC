@@ -1,15 +1,17 @@
 ﻿@model User
-
+@{
+    var reviews = Model.Reviews.Where(x => x.Status == CurrentStatus.Uploaded).ToList();
+}
 <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title" id="formModalLabel">Відгуки @Model.Name</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
-    @if(Model.Reviews.Count==0){
+    @if(reviews.Count==0){
         <h3 class="text-center">Відгуків немає</h3>
     }
-    @foreach(var item in Model.Reviews)
+    @foreach(var item in @reviews)
     {
         
         <div class="card mb-2">

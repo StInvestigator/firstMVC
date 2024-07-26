@@ -31,6 +31,7 @@ namespace firstMVC.Services
                 model.Balance = newUser.Balance;
                 model.Gallery = newUser.Gallery;
                 model.Image = newUser.Image;
+                model.CurrentStatus = newUser.CurrentStatus;
             }
             catch 
             {
@@ -52,9 +53,9 @@ namespace firstMVC.Services
                 Profession = form.ProfessionId == -1? null : await Professions.FirstAsync(pr=>pr.Id==form.ProfessionId),
                 Image = img,
                 Gallery = gallery,
-                Creator = creator
+                Creator = creator,
+                CurrentStatus = form.Status
             });
         }
-
     }
 }
